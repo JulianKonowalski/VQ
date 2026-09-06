@@ -6,38 +6,65 @@ namespace vq::graphics::core {
 
 /*----------------------------------------------------------------------------*/
 
+enum class TextureType { TEXTURE_1D, TEXTURE_2D, TEXTURE_3D, TEXTURE_CUBE_MAP };
+
+enum class TextureWrapType {
+    REPEAT,
+    MIRROR_REPEAT,
+    CLAMP_TO_EDGE,
+    MIRROR_CLAMP_TO_EDGE,
+    CLAMP_TO_BORDER
+};
+
+enum class TextureFilterType { NEAREST, LINEAR };
+
+/*----------------------------------------------------------------------------*/
+
+template <TextureType TType>
 class Texture : public vq::core::Resource {
   public:
-    enum class WrapType {
-        REPEAT,
-        MIRROR_REPEAT,
-        CLAMP_TO_EDGE,
-        MIRROR_CLAMP_TO_EDGE,
-        CLAMP_TO_BORDER
-    };
-
-    enum class FilterType { NEAREST, LINEAR };
-
     explicit Texture(const std::string& id, const std::string& source_file);
     ~Texture() override = default;
 
-    Texture(Texture&& other);
-    Texture& operator=(Texture&& other);
+    Texture(Texture<TType>&& other);
+    Texture<TType>& operator=(Texture<TType>&& other);
 
-    virtual void set_wrap_x(const WrapType wrap_type) noexcept = 0;
-    virtual void set_wrap_y(const WrapType wrap_type) noexcept = 0;
-    virtual void set_wrap_z(const WrapType wrap_type) noexcept = 0;
+    static void unbind_all();
+    inline static Texture<TType>* get_current();
+    inline static constexpr TextureType get_type();
 
-    virtual void set_filter_min(const FilterType filter_type) noexcept = 0;
-    virtual void set_filter_mag(const FilterType filter_type) noexcept = 0;
+    void set_wrap_s(const TextureWrapType wrap_type);
+    void set_wrap_t(const TextureWrapType wrap_type);
+    void set_wrap_r(const TextureWrapType wrap_type);
 
-    virtual void bind() noexcept   = 0;
-    virtual void unbind() noexcept = 0;
+    void set_filter_min(const TextureFilterType filter_type);
+    void set_filter_mag(const TextureFilterType filter_type);
+
+    void bind();
+    void unbind();
 
   protected:
     std::string m_source_file;
     unsigned int m_texture_id;
+
+  private:
+    static Texture<TType>* s_current_texture;
 };
+
+/*----------------------------------------------------------------------------*/
+
+template <TextureType TType>
+Texture<TType>* Texture<TType>::s_current_texture = nullptr;
+
+template <TextureType TType>
+inline Texture<TType>* Texture<TType>::get_current() {
+    return s_current_texture;
+}
+
+template <TextureType TType>
+inline constexpr TextureType Texture<TType>::get_type() {
+    return TType;
+}
 
 /*----------------------------------------------------------------------------*/
 
