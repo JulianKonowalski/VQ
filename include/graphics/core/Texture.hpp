@@ -2,6 +2,8 @@
 
 #include "core/Resource.hpp"
 
+#include <vector>
+
 namespace vq::graphics::core {
 
 /*----------------------------------------------------------------------------*/
@@ -23,7 +25,8 @@ enum class TextureFilterType { NEAREST, LINEAR };
 template <TextureType TType>
 class Texture : public vq::core::Resource {
   public:
-    explicit Texture(const std::string& id, const std::string& source_file);
+    explicit Texture(const std::string& id,
+                     const std::vector<std::string>& source_files);
     ~Texture() override = default;
 
     Texture(Texture<TType>&& other);
@@ -44,7 +47,7 @@ class Texture : public vq::core::Resource {
     void unbind();
 
   protected:
-    std::string m_source_file;
+    std::vector<std::string> m_source_files;
     unsigned int m_texture_id;
 
   private:

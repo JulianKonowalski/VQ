@@ -38,7 +38,7 @@ class TransformBase
                                     TransformUpdateEvent> {
   public:
     static constexpr glm::vec3 s_world_up     = {0.0f, 1.0f, 0.0f};
-    static constexpr glm::vec3 s_world_front  = {0.0f, 0.0f, 1.0f};
+    static constexpr glm::vec3 s_world_front  = {0.0f, 0.0f, -1.0f};
     static constexpr glm::vec3 s_world_right  = {1.0f, 0.0f, 0.0f};
     static constexpr glm::vec3 s_world_center = {0.0f, 0.0f, 0.0f};
 

@@ -49,8 +49,13 @@ struct MouseMoveEvent : public vq::core::EventBase {
 };
 
 struct MouseDragEvent : public vq::core::EventBase {
-    explicit MouseDragEvent(Window& window) : window(window) {}
+    explicit MouseDragEvent(Window& window, const double x_position_delta,
+                            const double y_position_delta)
+        : window(window), x_position_delta(x_position_delta),
+          y_position_delta(y_position_delta) {}
     Window& window;
+    const double x_position_delta;
+    const double y_position_delta;
 };
 
 struct WindowResizeEvent : public vq::core::EventBase {
@@ -82,9 +87,10 @@ class Window final
     };
 
     struct MouseState {
-        double mouse_x_position;
-        double mouse_y_position;
-        int key;
+        double mouse_x_position = 0.0f;
+        double mouse_y_position = 0.0f;
+        bool is_dragging        = false;
+        int key                 = 0;
     };
 
     static void unbind_all();
@@ -119,6 +125,14 @@ class Window final
 
     friend void pbr_core_window_on_mouse_button(Window& window, int button,
                                                 int action, int mods) {
+        if (!window.m_mouse_state.is_dragging) {
+            window.m_mouse_state.is_dragging = true;
+            window.m_mouse_state.key         = button;
+        } else if (button == window.m_mouse_state.key) {
+            window.m_mouse_state.is_dragging = false;
+        } else {
+            window.m_mouse_state.key = button;
+        }
         window.emit_event<MouseButtonEvent>(window, button, action, mods);
     }
 
@@ -133,6 +147,10 @@ class Window final
         window.m_mouse_state.mouse_y_position = mouse_y_position;
         window.emit_event<MouseMoveEvent>(window, x_position_delta,
                                           y_position_delta);
+        if (window.m_mouse_state.is_dragging) {
+            window.emit_event<MouseDragEvent>(window, x_position_delta,
+                                              y_position_delta);
+        }
     }
 
     friend void pbr_core_window_on_framebuffer_size_change(Window& window,

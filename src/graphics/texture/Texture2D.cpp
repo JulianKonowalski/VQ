@@ -12,7 +12,7 @@ using namespace vq::graphics::texture;
 /*----------------------------------------------------------------------------*/
 
 Texture2D::Texture2D(const std::string& id, const std::string& source_file)
-    : Texture<vq::graphics::core::TextureType::TEXTURE_2D>(id, source_file) {}
+    : Texture<vq::graphics::core::TextureType::TEXTURE_2D>(id, {source_file}) {}
 
 /*----------------------------------------------------------------------------*/
 
@@ -48,7 +48,7 @@ bool Texture2D::do_load() noexcept {
     int components = 0;
     stbi_set_flip_vertically_on_load(true);
     unsigned char* data =
-        stbi_load(m_source_file.c_str(), &width, &height, &components, 4);
+        stbi_load(m_source_files[0].c_str(), &width, &height, &components, 4);
     if (!data) {
         current_texture ? current_texture->bind() : Texture2D::unbind_all();
         return false;
