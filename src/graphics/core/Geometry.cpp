@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <iostream>
 
-using namespace vq::graphics::core;
+namespace vq::graphics::core {
 
 /*----------------------------------------------------------------------------*/
 
@@ -197,3 +197,5 @@ void Geometry::upload_attribute_data(const std::vector<float>& data,
 }
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::core

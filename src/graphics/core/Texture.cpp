@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-using namespace vq::graphics::core;
+namespace vq::graphics::core {
 
 /*----------------------------------------------------------------------------*/
 
@@ -253,3 +253,5 @@ template class vq::graphics::core::Texture<TextureType::TEXTURE_3D>;
 template class vq::graphics::core::Texture<TextureType::TEXTURE_CUBE_MAP>;
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::core

@@ -1,6 +1,6 @@
 #include "core/Resource.hpp"
 
-using namespace vq::core;
+namespace vq::core {
 
 /*----------------------------------------------------------------------------*/
 
@@ -68,3 +68,5 @@ ResourceManager& ResourceManager::get_instance() {
 }
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::core

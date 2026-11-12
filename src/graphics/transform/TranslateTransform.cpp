@@ -2,7 +2,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace vq::graphics::transform;
+namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
@@ -74,3 +74,5 @@ void TranslateTransform::on_update() {
 }
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::transform

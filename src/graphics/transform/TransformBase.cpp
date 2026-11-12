@@ -1,6 +1,6 @@
 #include "graphics/transform/TransformBase.hpp"
 
-using namespace vq::graphics::transform;
+namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
@@ -73,3 +73,5 @@ void TransformBase::set_dirty() {
 }
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::transform

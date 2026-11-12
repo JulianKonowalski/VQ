@@ -7,7 +7,7 @@
 #include <stb_image.h>
 #endif
 
-using namespace vq::graphics::texture;
+namespace vq::graphics::texture {
 
 /*----------------------------------------------------------------------------*/
 
@@ -72,3 +72,5 @@ bool Texture2D::do_reload() noexcept { return true; }
 void Texture2D::do_unload() noexcept {}
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::texture

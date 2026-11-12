@@ -6,7 +6,7 @@
 #include <glm/mat4x4.hpp>
 #include <iostream>
 
-using namespace vq::graphics::core;
+namespace vq::graphics::core {
 
 /*----------------------------------------------------------------------------*/
 
@@ -260,3 +260,5 @@ template Uniform<glm::mat4> Shader::get_uniform<glm::mat4>(const std::string&);
 template void Shader::update_uniform<glm::mat4>(Uniform<glm::mat4>&);
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::core

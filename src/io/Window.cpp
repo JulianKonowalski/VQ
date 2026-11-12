@@ -10,7 +10,7 @@
 
 /*----------------------------------------------------------------------------*/
 
-using namespace vq::io;
+namespace vq::io {
 
 static unsigned int s_window_count;
 
@@ -187,3 +187,5 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::io

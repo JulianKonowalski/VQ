@@ -1,6 +1,6 @@
 #include "graphics/transform/ViewTransform.hpp"
 
-using namespace vq::graphics::transform;
+namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
@@ -87,3 +87,5 @@ void ViewTransform::on_update() {
 }
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::transform

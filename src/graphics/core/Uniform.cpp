@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 
-using namespace vq::graphics::core;
+namespace vq::graphics::core {
 
 /*----------------------------------------------------------------------------*/
 
@@ -72,3 +72,5 @@ void Uniform<glm::mat4>::set_value(const glm::mat4& value) {
 template class vq::graphics::core::Uniform<glm::mat4>;
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::core

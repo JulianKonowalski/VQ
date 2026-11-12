@@ -1,6 +1,6 @@
 #include "core/Entity.hpp"
 
-using namespace vq::core;
+namespace vq::core {
 
 /*----------------------------------------------------------------------------*/
 
@@ -23,3 +23,5 @@ void Entity::update(double delta_time) {
 }
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::core

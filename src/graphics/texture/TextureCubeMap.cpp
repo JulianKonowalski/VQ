@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
-using namespace vq::graphics::texture;
+namespace vq::graphics::texture {
 
 /*----------------------------------------------------------------------------*/
 
@@ -84,3 +84,5 @@ bool TextureCubeMap::do_reload() noexcept { return true; }
 void TextureCubeMap::do_unload() noexcept {}
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::texture

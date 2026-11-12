@@ -2,7 +2,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace vq::graphics::transform;
+namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
@@ -184,3 +184,5 @@ void OrthographicProjection::on_update() {
 }
 
 /*----------------------------------------------------------------------------*/
+
+} // namespace vq::graphics::transform
