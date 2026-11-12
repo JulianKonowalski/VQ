@@ -1,4 +1,4 @@
-#include "graphics/core/Geometry.hpp"
+#include "vq/graphics/core/Geometry.hpp"
 
 #include <glad/glad.h>
 #include <iostream>

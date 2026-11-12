@@ -1,4 +1,4 @@
-#include "graphics/texture/TextureCubeMap.hpp"
+#include "vq/graphics/texture/TextureCubeMap.hpp"
 
 #include <glad/glad.h>
 #include <stb_image.h>

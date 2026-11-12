@@ -1,6 +1,6 @@
-#include "graphics/core/Uniform.hpp"
+#include "vq/graphics/core/Uniform.hpp"
 
-#include "graphics/core/Shader.hpp"
+#include "vq/graphics/core/Shader.hpp"
 
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>

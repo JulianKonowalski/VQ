@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/Resource.hpp"
-#include "graphics/core/Uniform.hpp"
+#include "vq/core/Resource.hpp"
+#include "vq/graphics/core/Uniform.hpp"
 
 #include <array>
 #include <vector>

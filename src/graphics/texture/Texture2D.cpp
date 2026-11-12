@@ -1,4 +1,4 @@
-#include "graphics/texture/Texture2D.hpp"
+#include "vq/graphics/texture/Texture2D.hpp"
 
 #include <glad/glad.h>
 

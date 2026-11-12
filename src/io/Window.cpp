@@ -1,4 +1,4 @@
-#include "io/Window.hpp"
+#include "vq/io/Window.hpp"
 
 // clang-format off
 #include <glad/glad.h>

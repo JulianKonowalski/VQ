@@ -1,6 +1,6 @@
-#include "graphics/core/Shader.hpp"
+#include "vq/graphics/core/Shader.hpp"
 
-#include "io/FileReader.hpp"
+#include "vq/io/FileReader.hpp"
 
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>

@@ -1,6 +1,6 @@
-#include "core/Component.hpp"
+#include "vq/core/Component.hpp"
 
-#include "core/Entity.hpp"
+#include "vq/core/Entity.hpp"
 
 #include <gtest/gtest.h>
 

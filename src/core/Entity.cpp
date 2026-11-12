@@ -1,4 +1,4 @@
-#include "core/Entity.hpp"
+#include "vq/core/Entity.hpp"
 
 namespace vq::core {
 

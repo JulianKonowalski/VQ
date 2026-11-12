@@ -1,4 +1,4 @@
-#include "core/Resource.hpp"
+#include "vq/core/Resource.hpp"
 
 namespace vq::core {
 

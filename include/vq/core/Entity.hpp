@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Component.hpp"
+#include "vq/core/Component.hpp"
 
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <unordered_map>
 

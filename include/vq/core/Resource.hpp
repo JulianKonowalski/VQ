@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/Event.hpp"
-#include "core/TypeId.hpp"
+#include "vq/core/Event.hpp"
+#include "vq/core/TypeId.hpp"
 
 #include <memory>
 #include <stdexcept>

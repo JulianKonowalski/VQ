@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/Event.hpp"
-#include "core/Resource.hpp"
+#include "vq/core/Event.hpp"
+#include "vq/core/Resource.hpp"
 
 namespace vq::graphics::core {
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics/core/Texture.hpp"
+#include "vq/graphics/core/Texture.hpp"
 
 namespace vq::graphics::texture {
 

@@ -1,16 +1,16 @@
-#include <core/Event.hpp>
-#include <core/Resource.hpp>
 #include <glad/glad.h>
-#include <graphics/core/Geometry.hpp>
-#include <graphics/core/Shader.hpp>
-#include <graphics/texture/Texture2D.hpp>
-#include <graphics/texture/TextureCubeMap.hpp>
-#include <graphics/transform/ProjectionTransform.hpp>
-#include <graphics/transform/RotateTransform.hpp>
-#include <graphics/transform/ScaleTransform.hpp>
-#include <graphics/transform/TranslateTransform.hpp>
-#include <graphics/transform/ViewTransform.hpp>
-#include <io/Window.hpp>
+#include <vq/core/Event.hpp>
+#include <vq/core/Resource.hpp>
+#include <vq/graphics/core/Geometry.hpp>
+#include <vq/graphics/core/Shader.hpp>
+#include <vq/graphics/texture/Texture2D.hpp>
+#include <vq/graphics/texture/TextureCubeMap.hpp>
+#include <vq/graphics/transform/ProjectionTransform.hpp>
+#include <vq/graphics/transform/RotateTransform.hpp>
+#include <vq/graphics/transform/ScaleTransform.hpp>
+#include <vq/graphics/transform/TranslateTransform.hpp>
+#include <vq/graphics/transform/ViewTransform.hpp>
+#include <vq/io/Window.hpp>
 
 /*----------------------------------------------------------------------------*/
 
