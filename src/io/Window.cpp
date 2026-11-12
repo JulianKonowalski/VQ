@@ -8,9 +8,9 @@
 #include <iostream>
 #include <stdexcept>
 
-/*----------------------------------------------------------------------------*/
-
 namespace vq::io {
+
+/*----------------------------------------------------------------------------*/
 
 static unsigned int s_window_count;
 
@@ -19,14 +19,20 @@ static unsigned int s_window_count;
 void GLAPIENTRY gl_error_callback(GLenum source, GLenum type, GLuint id,
                                   GLenum severity, GLsizei length,
                                   const GLchar* message, const void* userParam);
+
 void glfw_error_callback(int error_code, const char* description);
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action,
                   int mods);
+
 void scroll_callback(GLFWwindow* window, double x_offset, double y_offset);
+
 void mouse_button_callback(GLFWwindow* window, int button, int action,
                            int mods);
+
 void cursor_pos_callback(GLFWwindow* window, double x_position,
                          double y_position);
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 /*----------------------------------------------------------------------------*/
@@ -124,6 +130,50 @@ bool Window::should_close() {
 
 /*----------------------------------------------------------------------------*/
 
+void vq_io_window_key_callback(Window& window, int key, int scancode,
+                               int action, int mods) {
+    window.emit_event<KeyEvent>(window, key, scancode, action, mods);
+}
+
+void vq_io_window_scroll_callback(Window& window, double x_offset,
+                                  double y_offset) {
+    window.emit_event<MouseScrollEvent>(window, x_offset, y_offset);
+}
+
+void vq_io_window_mouse_button_callback(Window& window, int button, int action,
+                                        int mods) {
+    window.m_mouse_state.mods = mods;
+    window.m_mouse_state.buttons =
+        action == GLFW_PRESS ? window.m_mouse_state.buttons | (0b1 << button)
+                             : window.m_mouse_state.buttons & ~(0b1 << button);
+    window.emit_event<MouseButtonEvent>(window, button, action, mods);
+}
+
+void vq_io_window_cursor_pos_callback(Window& window, double x_position,
+                                      double y_position) {
+    const double x_position_delta =
+        x_position - window.m_mouse_state.x_position;
+    const double y_position_delta =
+        y_position - window.m_mouse_state.y_position;
+    window.m_mouse_state.x_position = x_position;
+    window.m_mouse_state.y_position = y_position;
+    if (window.m_mouse_state.buttons != 0) {
+        window.emit_event<MouseDragEvent>(window, x_position_delta,
+                                          y_position_delta);
+    }
+    window.emit_event<MouseMoveEvent>(window, x_position_delta,
+                                      y_position_delta);
+}
+
+void vq_io_window_framebuffer_size_callback(Window& window, int width,
+                                            int height) {
+    window.m_specification.width  = width;
+    window.m_specification.height = height;
+    window.emit_event<WindowResizeEvent>(window, width, height);
+}
+
+/*----------------------------------------------------------------------------*/
+
 void GLAPIENTRY gl_error_callback(GLenum source, GLenum type, GLuint id,
                                   GLenum severity, GLsizei length,
                                   const GLchar* message,
@@ -143,7 +193,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
     if (!glfw_window_user) {
         return;
     }
-    pbr_core_window_on_key_click(*glfw_window_user, key, scancode, action);
+    vq_io_window_key_callback(*glfw_window_user, key, scancode, action, mods);
 }
 
 void scroll_callback(GLFWwindow* window, double x_offset, double y_offset) {
@@ -152,7 +202,7 @@ void scroll_callback(GLFWwindow* window, double x_offset, double y_offset) {
     if (!glfw_window_user) {
         return;
     }
-    pbr_core_window_on_scroll(*glfw_window_user, x_offset, y_offset);
+    vq_io_window_scroll_callback(*glfw_window_user, x_offset, y_offset);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action,
@@ -162,7 +212,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action,
     if (!glfw_window_user) {
         return;
     }
-    pbr_core_window_on_mouse_button(*glfw_window_user, button, action, mods);
+    vq_io_window_mouse_button_callback(*glfw_window_user, button, action, mods);
 }
 
 void cursor_pos_callback(GLFWwindow* window, double x_position,
@@ -172,8 +222,7 @@ void cursor_pos_callback(GLFWwindow* window, double x_position,
     if (!glfw_window_user) {
         return;
     }
-    pbr_core_window_on_cursor_pos_change(*glfw_window_user, x_position,
-                                         y_position);
+    vq_io_window_cursor_pos_callback(*glfw_window_user, x_position, y_position);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -182,8 +231,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     if (!glfw_window_user) {
         return;
     }
-    pbr_core_window_on_framebuffer_size_change(*glfw_window_user, width,
-                                               height);
+    vq_io_window_framebuffer_size_callback(*glfw_window_user, width, height);
 }
 
 /*----------------------------------------------------------------------------*/

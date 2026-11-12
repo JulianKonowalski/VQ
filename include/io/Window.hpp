@@ -2,6 +2,8 @@
 
 #include "core/Event.hpp"
 
+#include <cstdint>
+
 namespace vq::io {
 
 /*----------------------------------------------------------------------------*/
@@ -11,12 +13,16 @@ class Window;
 /*----------------------------------------------------------------------------*/
 
 struct KeyEvent : public vq::core::EventBase {
-    explicit KeyEvent(Window& window, int key, int scancode, int action)
-        : window(window), key(key), scancode(scancode), action(action) {}
+    explicit KeyEvent(Window& window, int key, int scancode, int action,
+                      int mods)
+        : window(window), key(key), scancode(scancode), action(action),
+          mods(mods) {}
+
     Window& window;
     const int key;
     const int scancode;
     const int action;
+    const int mods;
 };
 
 struct MouseScrollEvent : public vq::core::EventBase {
@@ -24,6 +30,7 @@ struct MouseScrollEvent : public vq::core::EventBase {
                               double scroll_y_offset)
         : window(window), scroll_x_offset(scroll_x_offset),
           scroll_y_offset(scroll_y_offset) {}
+
     Window& window;
     const double scroll_x_offset;
     const double scroll_y_offset;
@@ -32,6 +39,7 @@ struct MouseScrollEvent : public vq::core::EventBase {
 struct MouseButtonEvent : public vq::core::EventBase {
     explicit MouseButtonEvent(Window& window, int button, int action, int mods)
         : window(window), button(button), action(action), mods(mods) {}
+
     Window& window;
     const int button;
     const int action;
@@ -43,6 +51,7 @@ struct MouseMoveEvent : public vq::core::EventBase {
                             const double y_position_delta)
         : window(window), x_position_delta(x_position_delta),
           y_position_delta(y_position_delta) {}
+
     Window& window;
     const double x_position_delta;
     const double y_position_delta;
@@ -53,6 +62,7 @@ struct MouseDragEvent : public vq::core::EventBase {
                             const double y_position_delta)
         : window(window), x_position_delta(x_position_delta),
           y_position_delta(y_position_delta) {}
+
     Window& window;
     const double x_position_delta;
     const double y_position_delta;
@@ -61,6 +71,7 @@ struct MouseDragEvent : public vq::core::EventBase {
 struct WindowResizeEvent : public vq::core::EventBase {
     explicit WindowResizeEvent(Window& window, int width, int height)
         : window(window), width(width), height(height) {}
+
     Window& window;
     const int width;
     const int height;
@@ -87,10 +98,12 @@ class Window final
     };
 
     struct MouseState {
-        double mouse_x_position = 0.0f;
-        double mouse_y_position = 0.0f;
-        bool is_dragging        = false;
-        int key                 = 0;
+        MouseState() : x_position(0.0), y_position(0.0), mods(0), buttons(0) {}
+
+        double x_position;
+        double y_position;
+        int mods;
+        uint8_t buttons;
     };
 
     static void unbind_all();
@@ -113,53 +126,21 @@ class Window final
     void make_current();
     bool should_close();
 
-    friend void pbr_core_window_on_key_click(Window& window, int key,
-                                             int scancode, int action) {
-        window.emit_event<KeyEvent>(window, key, scancode, action);
-    }
+    friend void vq_io_window_key_callback(Window& window, int key, int scancode,
+                                          int action, int mods);
 
-    friend void pbr_core_window_on_scroll(Window& window, double x_offset,
-                                          double y_offset) {
-        window.emit_event<MouseScrollEvent>(window, x_offset, y_offset);
-    }
+    friend void vq_io_window_scroll_callback(Window& window, double x_offset,
+                                             double y_offset);
 
-    friend void pbr_core_window_on_mouse_button(Window& window, int button,
-                                                int action, int mods) {
-        if (!window.m_mouse_state.is_dragging) {
-            window.m_mouse_state.is_dragging = true;
-            window.m_mouse_state.key         = button;
-        } else if (button == window.m_mouse_state.key) {
-            window.m_mouse_state.is_dragging = false;
-        } else {
-            window.m_mouse_state.key = button;
-        }
-        window.emit_event<MouseButtonEvent>(window, button, action, mods);
-    }
+    friend void vq_io_window_mouse_button_callback(Window& window, int button,
+                                                   int action, int mods);
 
-    friend void pbr_core_window_on_cursor_pos_change(Window& window,
-                                                     double mouse_x_position,
-                                                     double mouse_y_position) {
-        const double x_position_delta =
-            window.m_mouse_state.mouse_x_position - mouse_x_position;
-        const double y_position_delta =
-            window.m_mouse_state.mouse_y_position - mouse_y_position;
-        window.m_mouse_state.mouse_x_position = mouse_x_position;
-        window.m_mouse_state.mouse_y_position = mouse_y_position;
-        window.emit_event<MouseMoveEvent>(window, x_position_delta,
-                                          y_position_delta);
-        if (window.m_mouse_state.is_dragging) {
-            window.emit_event<MouseDragEvent>(window, x_position_delta,
-                                              y_position_delta);
-        }
-    }
+    friend void vq_io_window_cursor_pos_callback(Window& window,
+                                                 double x_position,
+                                                 double y_position);
 
-    friend void pbr_core_window_on_framebuffer_size_change(Window& window,
-                                                           int width,
-                                                           int height) {
-        window.m_specification.width  = width;
-        window.m_specification.height = height;
-        window.emit_event<WindowResizeEvent>(window, width, height);
-    }
+    friend void vq_io_window_framebuffer_size_callback(Window& window,
+                                                       int width, int height);
 
   private:
     void* m_glfw_window;
