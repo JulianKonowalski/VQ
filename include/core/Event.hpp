@@ -8,18 +8,17 @@ namespace vq::core {
 /*----------------------------------------------------------------------------*/
 
 template <typename EventType>
-class EventEmitterBase;
+class EventHandlerBase;
 
 /*----------------------------------------------------------------------------*/
 
 class EventBase {
   public:
-    EventBase() : m_is_handled(false) {}
+    inline EventBase();
     ~EventBase() = default;
 
-    EventBase(EventBase&& other)      = delete;
-    EventBase(const EventBase& other) = delete;
-
+    EventBase(EventBase&& other)                 = delete;
+    EventBase(const EventBase& other)            = delete;
     EventBase& operator=(EventBase&& other)      = delete;
     EventBase& operator=(const EventBase& other) = delete;
 
@@ -28,6 +27,40 @@ class EventBase {
 
   private:
     bool m_is_handled;
+};
+
+/*----------------------------------------------------------------------------*/
+
+template <typename EventType>
+class EventEmitterBase {
+    static_assert(std::is_base_of_v<EventBase, EventType>,
+                  "EventType must derive from vq::core::EventBase");
+
+    friend EventHandlerBase<EventType>;
+
+    using ThisType = EventEmitterBase<EventType>;
+
+  public:
+    EventEmitterBase() = default;
+    ~EventEmitterBase();
+
+    EventEmitterBase(ThisType&& other);
+    EventEmitterBase(const ThisType& other);
+
+    ThisType& operator=(ThisType&& other);
+    ThisType& operator=(const ThisType& other);
+
+    bool attach_event_handler(EventHandlerBase<EventType>& event_handler);
+    bool detach_event_handler(EventHandlerBase<EventType>& event_handler);
+
+  protected:
+    void emit_event(EventType& event);
+
+  private:
+    bool replace_event_handler(EventHandlerBase<EventType>& old_event_handler,
+                               EventHandlerBase<EventType>& new_event_handler);
+
+    std::vector<EventHandlerBase<EventType>*> m_event_handlers;
 };
 
 /*----------------------------------------------------------------------------*/
@@ -59,35 +92,6 @@ class EventHandlerBase {
     bool detach_event_emitter(EventEmitterBase<EventType>& event_emitter);
 
     std::vector<EventEmitterBase<EventType>*> m_event_emitters;
-};
-
-/*----------------------------------------------------------------------------*/
-
-template <typename EventType>
-class EventEmitterBase {
-    static_assert(std::is_base_of_v<EventBase, EventType>,
-                  "EventType must derive from vq::core::EventBase");
-
-    using ThisType = EventEmitterBase<EventType>;
-
-  public:
-    EventEmitterBase() = default;
-    ~EventEmitterBase();
-
-    EventEmitterBase(ThisType&& other);
-    EventEmitterBase(const ThisType& other);
-
-    ThisType& operator=(ThisType&& other);
-    ThisType& operator=(const ThisType& other);
-
-    bool attach_event_handler(EventHandlerBase<EventType>& event_handler);
-    bool detach_event_handler(EventHandlerBase<EventType>& event_handler);
-
-  protected:
-    void emit_event(EventType& event);
-
-  private:
-    std::vector<EventHandlerBase<EventType>*> m_event_handlers;
 };
 
 /*----------------------------------------------------------------------------*/
@@ -138,6 +142,8 @@ class EventHandler : public EventHandlerBase<EventTypes>... {
 
 /*----------------------------------------------------------------------------*/
 
+inline EventBase::EventBase() : m_is_handled(false) {}
+
 inline bool EventBase::is_handled() const { return m_is_handled; }
 
 inline void EventBase::set_handled() { m_is_handled = true; }
@@ -145,75 +151,9 @@ inline void EventBase::set_handled() { m_is_handled = true; }
 /*----------------------------------------------------------------------------*/
 
 template <typename EventType>
-EventHandlerBase<EventType>::~EventHandlerBase() {
-    for (auto* event_emitter : m_event_emitters) {
-        event_emitter->detach_event_handler(*this);
-    }
-}
-
-template <typename EventType>
-EventHandlerBase<EventType>::EventHandlerBase(ThisType&& other) {
-    *this = std::move(other);
-}
-
-template <typename EventType>
-EventHandlerBase<EventType>::EventHandlerBase(const ThisType& other) {
-    *this = other;
-}
-
-template <typename EventType>
-EventHandlerBase<EventType>&
-EventHandlerBase<EventType>::operator=(ThisType&& other) {
-    for (auto* event_emitter : other.m_event_emitters) {
-        event_emitter->detach_event_handler(other);
-        event_emitter->attach_event_handler(*this);
-    }
-    return *this;
-}
-
-template <typename EventType>
-EventHandlerBase<EventType>&
-EventHandlerBase<EventType>::operator=(const ThisType& other) {
-    for (auto* event_emitter : other.m_event_emitters) {
-        event_emitter->attach_event_handler(*this);
-    }
-    return *this;
-}
-
-template <typename EventType>
-bool EventHandlerBase<EventType>::attach_event_emitter(
-    EventEmitterBase<EventType>& event_emitter) {
-    auto it =
-        std::find_if(m_event_emitters.begin(), m_event_emitters.end(),
-                     [&](auto* emitter) { return emitter == &event_emitter; });
-    if (it != m_event_emitters.end()) {
-        return false;
-    }
-
-    m_event_emitters.push_back(&event_emitter);
-    return true;
-}
-
-template <typename EventType>
-bool EventHandlerBase<EventType>::detach_event_emitter(
-    EventEmitterBase<EventType>& event_emitter) {
-    auto it =
-        std::find_if(m_event_emitters.begin(), m_event_emitters.end(),
-                     [&](auto* emitter) { return emitter == &event_emitter; });
-    if (it == m_event_emitters.end()) {
-        return false;
-    }
-
-    m_event_emitters.erase(it);
-    return true;
-}
-
-/*----------------------------------------------------------------------------*/
-
-template <typename EventType>
 EventEmitterBase<EventType>::~EventEmitterBase() {
-    for (auto* event_handler : m_event_handlers) {
-        event_handler->detach_event_emitter(*this);
+    for (auto* p_event_handler : m_event_handlers) {
+        p_event_handler->detach_event_emitter(*this);
     }
 }
 
@@ -230,9 +170,14 @@ EventEmitterBase<EventType>::EventEmitterBase(const ThisType& other) {
 template <typename EventType>
 EventEmitterBase<EventType>&
 EventEmitterBase<EventType>::operator=(ThisType&& other) {
-    for (auto* event_handler : other.m_event_handlers) {
-        this->attach_event_handler(*event_handler);
-        other.detach_event_handler(*event_handler);
+    /**
+     * Don't do a range-based for loop, as other.m_event_handlers is modified
+     * and can lead to iterator invalidation
+     */
+    while (other.m_event_handlers.size() > 0) {
+        auto* p_event_handler = other.m_event_handlers[0];
+        this->attach_event_handler(*p_event_handler);
+        other.detach_event_handler(*p_event_handler);
     }
     return *this;
 }
@@ -240,8 +185,8 @@ EventEmitterBase<EventType>::operator=(ThisType&& other) {
 template <typename EventType>
 EventEmitterBase<EventType>&
 EventEmitterBase<EventType>::operator=(const ThisType& other) {
-    for (auto* event_handler : other.m_event_handlers) {
-        this->attach_event_handler(*event_handler);
+    for (auto* p_event_handler : other.m_event_handlers) {
+        this->attach_event_handler(*p_event_handler);
     }
     return *this;
 }
@@ -256,6 +201,7 @@ bool EventEmitterBase<EventType>::attach_event_handler(
         return false;
     }
     m_event_handlers.push_back(&event_handler);
+    event_handler.attach_event_emitter(*this);
     return true;
 }
 
@@ -269,6 +215,7 @@ bool EventEmitterBase<EventType>::detach_event_handler(
         return false;
     }
     m_event_handlers.erase(it);
+    event_handler.detach_event_emitter(*this);
     return true;
 }
 
@@ -280,6 +227,93 @@ void EventEmitterBase<EventType>::emit_event(EventType& event) {
             break;
         }
     }
+}
+
+template <typename EventType>
+bool EventEmitterBase<EventType>::replace_event_handler(
+    EventHandlerBase<EventType>& old_event_handler,
+    EventHandlerBase<EventType>& new_event_handler) {
+    auto it = std::find_if(
+        m_event_handlers.begin(), m_event_handlers.end(),
+        [&](auto* handler) { return handler == &old_event_handler; });
+    if (it == m_event_handlers.end()) {
+        return false;
+    }
+    *it = &new_event_handler;
+    old_event_handler.detach_event_emitter(*this);
+    new_event_handler.attach_event_emitter(*this);
+    return true;
+}
+
+/*----------------------------------------------------------------------------*/
+
+template <typename EventType>
+EventHandlerBase<EventType>::~EventHandlerBase() {
+    /**
+     * Don't do a range-based for loop, as m_event_emitters is indirectly
+     * modified and can lead to iterator invalidation
+     */
+    while (m_event_emitters.size() > 0) {
+        m_event_emitters[0]->detach_event_handler(*this);
+    }
+}
+
+template <typename EventType>
+EventHandlerBase<EventType>::EventHandlerBase(ThisType&& other) {
+    *this = std::move(other);
+}
+
+template <typename EventType>
+EventHandlerBase<EventType>::EventHandlerBase(const ThisType& other) {
+    *this = other;
+}
+
+template <typename EventType>
+EventHandlerBase<EventType>&
+EventHandlerBase<EventType>::operator=(ThisType&& other) {
+    /**
+     * Don't do a range-based for loop, as m_event_emitters is indirectly
+     * modified and can lead to iterator invalidation
+     */
+    while (other.m_event_emitters.size() > 0) {
+        other.m_event_emitters[0]->replace_event_handler(other, *this);
+    }
+    return *this;
+}
+
+template <typename EventType>
+EventHandlerBase<EventType>&
+EventHandlerBase<EventType>::operator=(const ThisType& other) {
+    for (auto* p_event_emitter : other.m_event_emitters) {
+        p_event_emitter->attach_event_handler(*this);
+    }
+    return *this;
+}
+
+template <typename EventType>
+bool EventHandlerBase<EventType>::attach_event_emitter(
+    EventEmitterBase<EventType>& event_emitter) {
+    auto it =
+        std::find_if(m_event_emitters.begin(), m_event_emitters.end(),
+                     [&](auto* emitter) { return emitter == &event_emitter; });
+    if (it != m_event_emitters.end()) {
+        return false;
+    }
+    m_event_emitters.push_back(&event_emitter);
+    return true;
+}
+
+template <typename EventType>
+bool EventHandlerBase<EventType>::detach_event_emitter(
+    EventEmitterBase<EventType>& event_emitter) {
+    auto it =
+        std::find_if(m_event_emitters.begin(), m_event_emitters.end(),
+                     [&](auto* emitter) { return emitter == &event_emitter; });
+    if (it == m_event_emitters.end()) {
+        return false;
+    }
+    m_event_emitters.erase(it);
+    return true;
 }
 
 /*----------------------------------------------------------------------------*/

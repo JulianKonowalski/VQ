@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/Event.hpp"
 #include "core/TypeId.hpp"
 
 #include <memory>
@@ -12,7 +13,27 @@ namespace vq::core {
 
 /*----------------------------------------------------------------------------*/
 
-class Resource {
+class Resource;
+
+struct ResourceLoadEvent : public EventBase {
+    ResourceLoadEvent(Resource& resource) : resource(resource) {}
+    Resource& resource;
+};
+
+struct ResourceReloadEvent : public EventBase {
+    ResourceReloadEvent(Resource& resource) : resource(resource) {}
+    Resource& resource;
+};
+
+struct ResourceUnloadEvent : public EventBase {
+    ResourceUnloadEvent(Resource& resource) : resource(resource) {}
+    Resource& resource;
+};
+
+/*----------------------------------------------------------------------------*/
+
+class Resource : public EventEmitter<ResourceLoadEvent, ResourceReloadEvent,
+                                     ResourceUnloadEvent> {
   public:
     explicit Resource(const std::string& id);
     virtual ~Resource() = default;
@@ -51,16 +72,18 @@ class ResourceHandle {
                   "ResourceType must derive from vq::core::Resource");
 
     friend class ResourceManager;
-    using ThisType = ResourceHandle<ResourceType>;
 
   public:
     ~ResourceHandle();
 
-    ResourceHandle(ThisType&& other);
-    ThisType& operator=(ThisType&& other);
+    ResourceHandle(ResourceHandle<ResourceType>&& other);
+    ResourceHandle(const ResourceHandle<ResourceType>& other);
 
-    ResourceHandle(const ThisType& other)      = delete;
-    ThisType& operator=(const ThisType& other) = delete;
+    ResourceHandle<ResourceType>&
+    operator=(ResourceHandle<ResourceType>&& other);
+
+    ResourceHandle<ResourceType>&
+    operator=(const ResourceHandle<ResourceType>& other);
 
     inline bool is_valid() const;
     inline ResourceType& get() const;
@@ -142,9 +165,23 @@ ResourceHandle<ResourceType>::ResourceHandle(
       m_resource_manager(other.m_resource_manager) {}
 
 template <typename ResourceType>
+ResourceHandle<ResourceType>::ResourceHandle(
+    const ResourceHandle<ResourceType>& other)
+    : m_resource(other.m_resource),
+      m_resource_manager(other.m_resource_manager) {}
+
+template <typename ResourceType>
 ResourceHandle<ResourceType>&
 ResourceHandle<ResourceType>::operator=(ResourceHandle<ResourceType>&& other) {
     m_resource         = std::move(other.m_resource);
+    m_resource_manager = other.m_resource_manager;
+    return *this;
+}
+
+template <typename ResourceType>
+ResourceHandle<ResourceType>& ResourceHandle<ResourceType>::operator=(
+    const ResourceHandle<ResourceType>& other) {
+    m_resource         = other.m_resource;
     m_resource_manager = other.m_resource_manager;
     return *this;
 }

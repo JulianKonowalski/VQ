@@ -3,6 +3,7 @@
 #include "io/FileReader.hpp"
 
 #include <glad/glad.h>
+#include <glm/mat4x4.hpp>
 #include <iostream>
 
 using namespace vq::graphics::core;
@@ -58,6 +59,25 @@ void Shader::unbind_all() { glUseProgram(GL_NONE); }
 
 /*----------------------------------------------------------------------------*/
 
+template <typename UniformValueType>
+Uniform<UniformValueType> Shader::get_uniform(const std::string& uniform_id) {
+    const unsigned int uniform_location =
+        glGetUniformLocation(m_shader_id, uniform_id.c_str());
+    Uniform<UniformValueType> uniform(uniform_id, uniform_location);
+    this->attach_event_handler<vq::core::ResourceReloadEvent>(uniform);
+    return std::move(uniform);
+}
+
+/*----------------------------------------------------------------------------*/
+
+template <typename UniformValueType>
+void Shader::update_uniform(Uniform<UniformValueType>& uniform) {
+    uniform.m_uniform_location =
+        glGetUniformLocation(m_shader_id, uniform.m_uniform_id.c_str());
+}
+
+/*----------------------------------------------------------------------------*/
+
 void Shader::bind() { glUseProgram(m_shader_id); }
 
 /*----------------------------------------------------------------------------*/
@@ -73,16 +93,16 @@ void Shader::unbind() {
 
 /*----------------------------------------------------------------------------*/
 
-unsigned int Shader::get_uniform_location(const std::string& uniform_id) {
-    return glGetUniformLocation(m_shader_id, uniform_id.c_str());
-}
+// unsigned int Shader::get_uniform_location(const std::string& uniform_id) {
+//     return glGetUniformLocation(m_shader_id, uniform_id.c_str());
+// }
 
 /*----------------------------------------------------------------------------*/
 
-void Shader::set_uniform_mat4(const unsigned int uniform_location,
-                              const glm::mat4& data) {
-    glUniformMatrix4fv(uniform_location, 1, GL_FALSE, &data[0][0]);
-}
+// void Shader::set_uniform_mat4(const unsigned int uniform_location,
+//                               const glm::mat4& data) {
+//     glUniformMatrix4fv(uniform_location, 1, GL_FALSE, &data[0][0]);
+// }
 
 /*----------------------------------------------------------------------------*/
 
@@ -132,7 +152,7 @@ bool Shader::do_reload() noexcept {
         return false;
     }
 
-    return false;
+    return true;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -230,5 +250,13 @@ void cleanup_gl_shaders(unsigned int& gl_program_id,
         gl_shader_id = 0;
     }
 }
+
+/*----------------------------------------------------------------------------*/
+
+template Uniform<glm::mat4> Shader::get_uniform<glm::mat4>(const std::string&);
+
+/*----------------------------------------------------------------------------*/
+
+template void Shader::update_uniform<glm::mat4>(Uniform<glm::mat4>&);
 
 /*----------------------------------------------------------------------------*/

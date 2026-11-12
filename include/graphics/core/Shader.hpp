@@ -1,11 +1,9 @@
 #pragma once
 
 #include "core/Resource.hpp"
+#include "graphics/core/Uniform.hpp"
 
 #include <array>
-#include <cstdint>
-#include <glm/mat4x4.hpp>
-#include <utility>
 #include <vector>
 
 namespace vq::graphics::core {
@@ -30,12 +28,18 @@ class Shader final : public vq::core::Resource {
 
     static void unbind_all();
 
+    template <typename UniformValueType>
+    Uniform<UniformValueType> get_uniform(const std::string& uniform_id);
+
+    template <typename UniformValueType>
+    void update_uniform(Uniform<UniformValueType>& uniform);
+
     void bind();
     void unbind();
 
-    unsigned int get_uniform_location(const std::string& uniform_id);
-    void set_uniform_mat4(const unsigned int uniform_location,
-                          const glm::mat4& data);
+    // unsigned int get_uniform_location(const std::string& uniform_id);
+    // void set_uniform_mat4(const unsigned int uniform_location,
+    //                       const glm::mat4& data);
 
   protected:
     virtual bool do_load() noexcept override;

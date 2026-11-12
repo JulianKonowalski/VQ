@@ -21,13 +21,32 @@ Resource& Resource::operator=(Resource&& other) {
 /*----------------------------------------------------------------------------*/
 
 bool Resource::load() {
+    if (m_is_loaded) {
+        return true;
+    }
+
     m_is_loaded = this->do_load();
+    if (m_is_loaded) {
+        this->emit_event<ResourceLoadEvent>(*this);
+    }
+
     return m_is_loaded;
 }
 
 /*----------------------------------------------------------------------------*/
 
-bool Resource::reload() { return m_is_loaded ? this->do_reload() : false; }
+bool Resource::reload() {
+    if (!m_is_loaded) {
+        return false;
+    }
+
+    if (!this->do_reload()) {
+        return false;
+    }
+
+    this->emit_event<ResourceReloadEvent>(*this);
+    return true;
+}
 
 /*----------------------------------------------------------------------------*/
 
@@ -35,7 +54,9 @@ void Resource::unload() {
     if (!m_is_loaded) {
         return;
     }
+
     this->do_unload();
+    this->emit_event<ResourceUnloadEvent>(*this);
     m_is_loaded = false;
 }
 

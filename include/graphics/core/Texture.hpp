@@ -33,8 +33,10 @@ class Texture : public vq::core::Resource {
     Texture<TType>& operator=(Texture<TType>&& other);
 
     static void unbind_all();
-    inline static Texture<TType>* get_current();
+    inline static Texture<TType>* const get_current();
     inline static constexpr TextureType get_type();
+
+    inline const std::vector<std::string>& get_source_files() const;
 
     void set_wrap_s(const TextureWrapType wrap_type);
     void set_wrap_t(const TextureWrapType wrap_type);
@@ -60,13 +62,19 @@ template <TextureType TType>
 Texture<TType>* Texture<TType>::s_current_texture = nullptr;
 
 template <TextureType TType>
-inline Texture<TType>* Texture<TType>::get_current() {
+inline Texture<TType>* const Texture<TType>::get_current() {
     return s_current_texture;
 }
 
 template <TextureType TType>
 inline constexpr TextureType Texture<TType>::get_type() {
     return TType;
+}
+
+template <TextureType TType>
+inline const std::vector<std::string>&
+Texture<TType>::get_source_files() const {
+    return m_source_files;
 }
 
 /*----------------------------------------------------------------------------*/
