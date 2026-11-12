@@ -14,6 +14,10 @@ endif()
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
+set(VQ_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
+set(VQ_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(VQ_3RDPARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty)
+
 find_package(OpenGL REQUIRED)
 
 add_subdirectory(3rdparty/glm)
@@ -21,6 +25,6 @@ add_subdirectory(3rdparty/glfw)
 add_subdirectory(3rdparty/glad)
 add_subdirectory(3rdparty/googletest)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/src)
-add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
-add_subdirectory(${CMAKE_SOURCE_DIR}/examples)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tests)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)

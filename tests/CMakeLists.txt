@@ -15,6 +15,6 @@ add_custom_command(
     TARGET ${PROJECT_NAME}
     COMMENT "Run all tests"
     POST_BUILD
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    WORKING_DIRECTORY ${VQ_BINARY_DIR}
     COMMAND ./tests/${PROJECT_NAME}
 )

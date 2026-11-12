@@ -10,7 +10,12 @@ file(GLOB_RECURSE SOURCES CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_LIST_DIR}/*.cp
 add_library(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
 target_include_directories(${PROJECT_NAME}
-    PUBLIC ${CMAKE_SOURCE_DIR}/include
-    PRIVATE ${CMAKE_SOURCE_DIR}/3rdparty/stb
+    PUBLIC ${VQ_INCLUDE_DIR}
+    PRIVATE ${VQ_3RDPARTY_DIR}/stb
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL glm glfw glad)
+target_link_libraries(${PROJECT_NAME} 
+    PUBLIC glm 
+    PRIVATE OpenGL::GL 
+    PRIVATE glfw 
+    PRIVATE glad
+)
