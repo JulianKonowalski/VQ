@@ -1,4 +1,4 @@
-# PBR Renderer
+# VQ
 
 This is a small pbr renderer/mini engine for my own needs. I noticed that almost
 every project I do needs some kind of 2D/3D graphics and I got a little tired of
