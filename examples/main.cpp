@@ -195,9 +195,6 @@ int main(void) {
              -1.0f, -1.0f, 1.0f,  //
              1.0f,  -1.0f, 1.0f});
 
-    // unsigned int model_matrix_uniform_location =
-    //     test_shader_handle.get().get_uniform_location("u_model_matrix");
-
     auto model_matrix_uniform =
         test_shader_handle.get().get_uniform<glm::mat4>("u_model_matrix");
     auto view_matrix_uniform =
@@ -205,11 +202,6 @@ int main(void) {
     auto projection_matrix_uniform =
         skybox_shader_handle.get().get_uniform<glm::mat4>(
             "u_projection_matrix");
-
-    // unsigned int view_matrix_uniform_location =
-    //     skybox_shader_handle.get().get_uniform_location("u_view_matrix");
-    // unsigned int projection_matrix_uniform_location =
-    //     skybox_shader_handle.get().get_uniform_location("u_projection_matrix");
 
     vq::graphics::transform::RotateTransform rotate_transform;
     vq::graphics::transform::TranslateTransform translate_transform;
@@ -233,13 +225,6 @@ int main(void) {
         projection_matrix_uniform.set_value(
             projection_transform.get_transform_matrix());
 
-        // skybox_shader_handle.get().set_uniform_mat4(
-        //     view_matrix_uniform_location,
-        //     );
-        // skybox_shader_handle.get().set_uniform_mat4(
-        //     projection_matrix_uniform_location,
-        //     projection_transform.get_transform_matrix());
-
         skybox_texture_handle.get().bind();
         skybox_geometry_handle.get().bind();
 
@@ -254,10 +239,6 @@ int main(void) {
             view_transform.get_transform_matrix() *
             translate_transform.get_transform_matrix() *
             rotate_transform.get_transform_matrix());
-
-        // test_shader_handle.get().set_uniform_mat4(
-        //     model_matrix_uniform_location,
-        //     );
 
         glActiveTexture(GL_TEXTURE0);
         test_texture_handle.get().bind();
