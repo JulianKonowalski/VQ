@@ -194,9 +194,8 @@ EventEmitterBase<EventType>::operator=(const ThisType& other) {
 template <typename EventType>
 bool EventEmitterBase<EventType>::attach_event_handler(
     EventHandlerBase<EventType>& event_handler) {
-    auto it =
-        std::find_if(m_event_handlers.begin(), m_event_handlers.end(),
-                     [&](auto* handler) { return handler == &event_handler; });
+    auto it = std::find(m_event_handlers.begin(), m_event_handlers.end(),
+                        &event_handler);
     if (it != m_event_handlers.end()) {
         return false;
     }
@@ -208,9 +207,8 @@ bool EventEmitterBase<EventType>::attach_event_handler(
 template <typename EventType>
 bool EventEmitterBase<EventType>::detach_event_handler(
     EventHandlerBase<EventType>& event_handler) {
-    auto it =
-        std::find_if(m_event_handlers.begin(), m_event_handlers.end(),
-                     [&](auto* handler) { return handler == &event_handler; });
+    auto it = std::find(m_event_handlers.begin(), m_event_handlers.end(),
+                        &event_handler);
     if (it == m_event_handlers.end()) {
         return false;
     }
@@ -233,9 +231,8 @@ template <typename EventType>
 bool EventEmitterBase<EventType>::replace_event_handler(
     EventHandlerBase<EventType>& old_event_handler,
     EventHandlerBase<EventType>& new_event_handler) {
-    auto it = std::find_if(
-        m_event_handlers.begin(), m_event_handlers.end(),
-        [&](auto* handler) { return handler == &old_event_handler; });
+    auto it = std::find(m_event_handlers.begin(), m_event_handlers.end(),
+                        &old_event_handler);
     if (it == m_event_handlers.end()) {
         return false;
     }
@@ -293,9 +290,8 @@ EventHandlerBase<EventType>::operator=(const ThisType& other) {
 template <typename EventType>
 bool EventHandlerBase<EventType>::attach_event_emitter(
     EventEmitterBase<EventType>& event_emitter) {
-    auto it =
-        std::find_if(m_event_emitters.begin(), m_event_emitters.end(),
-                     [&](auto* emitter) { return emitter == &event_emitter; });
+    auto it = std::find(m_event_emitters.begin(), m_event_emitters.end(),
+                        &event_emitter);
     if (it != m_event_emitters.end()) {
         return false;
     }
@@ -306,9 +302,8 @@ bool EventHandlerBase<EventType>::attach_event_emitter(
 template <typename EventType>
 bool EventHandlerBase<EventType>::detach_event_emitter(
     EventEmitterBase<EventType>& event_emitter) {
-    auto it =
-        std::find_if(m_event_emitters.begin(), m_event_emitters.end(),
-                     [&](auto* emitter) { return emitter == &event_emitter; });
+    auto it = std::find(m_event_emitters.begin(), m_event_emitters.end(),
+                        &event_emitter);
     if (it == m_event_emitters.end()) {
         return false;
     }
