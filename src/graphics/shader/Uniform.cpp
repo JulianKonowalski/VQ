@@ -1,11 +1,11 @@
-#include "vq/graphics/core/Uniform.hpp"
+#include "vq/graphics/shader/Uniform.hpp"
 
-#include "vq/graphics/core/Shader.hpp"
+#include "vq/graphics/shader/Shader.hpp"
 
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 
-namespace vq::graphics::core {
+namespace vq::graphics::shader {
 
 /*----------------------------------------------------------------------------*/
 
@@ -54,7 +54,8 @@ Uniform<ValueType>::operator=(const Uniform<ValueType>& other) {
 
 template <typename ValueType>
 void Uniform<ValueType>::handle(vq::core::ResourceReloadEvent& event) noexcept {
-    auto* p_shader = dynamic_cast<vq::graphics::core::Shader*>(&event.resource);
+    auto* p_shader =
+        dynamic_cast<vq::graphics::shader::Shader*>(&event.resource);
     if (p_shader) {
         p_shader->update_uniform<ValueType>(*this);
     }
@@ -69,8 +70,8 @@ void Uniform<glm::mat4>::set_value(const glm::mat4& value) {
 
 /*----------------------------------------------------------------------------*/
 
-template class vq::graphics::core::Uniform<glm::mat4>;
+template class vq::graphics::shader::Uniform<glm::mat4>;
 
 /*----------------------------------------------------------------------------*/
 
-} // namespace vq::graphics::core
+} // namespace vq::graphics::shader

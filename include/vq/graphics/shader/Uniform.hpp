@@ -3,7 +3,7 @@
 #include "vq/core/Event.hpp"
 #include "vq/core/Resource.hpp"
 
-namespace vq::graphics::core {
+namespace vq::graphics::shader {
 
 /*----------------------------------------------------------------------------*/
 
@@ -34,4 +34,4 @@ class Uniform final
 
 /*----------------------------------------------------------------------------*/
 
-} // namespace vq::graphics::core
+} // namespace vq::graphics::shader

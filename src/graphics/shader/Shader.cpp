@@ -1,4 +1,4 @@
-#include "vq/graphics/core/Shader.hpp"
+#include "vq/graphics/shader/Shader.hpp"
 
 #include "vq/io/FileReader.hpp"
 
@@ -6,7 +6,7 @@
 #include <glm/mat4x4.hpp>
 #include <iostream>
 
-namespace vq::graphics::core {
+namespace vq::graphics::shader {
 
 /*----------------------------------------------------------------------------*/
 
@@ -261,4 +261,4 @@ template void Shader::update_uniform<glm::mat4>(Uniform<glm::mat4>&);
 
 /*----------------------------------------------------------------------------*/
 
-} // namespace vq::graphics::core
+} // namespace vq::graphics::shader

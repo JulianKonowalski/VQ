@@ -2,7 +2,7 @@
 #include <vq/core/Event.hpp>
 #include <vq/core/Resource.hpp>
 #include <vq/graphics/core/Geometry.hpp>
-#include <vq/graphics/core/Shader.hpp>
+#include <vq/graphics/shader/Shader.hpp>
 #include <vq/graphics/texture/Texture2D.hpp>
 #include <vq/graphics/texture/TextureCubeMap.hpp>
 #include <vq/graphics/transform/ProjectionTransform.hpp>
@@ -48,7 +48,7 @@ class WindowKeyHandler : public vq::core::EventHandler<vq::io::KeyEvent> {
         } else if (event.key == 82) { // GLFW KEY R
             auto& resource_manager = vq::core::ResourceManager::get_instance();
             auto shader_handle =
-                resource_manager.get_resource<vq::graphics::core::Shader>(
+                resource_manager.get_resource<vq::graphics::shader::Shader>(
                     "test_shader");
             if (shader_handle.is_valid()) {
                 shader_handle.get().reload();
@@ -89,21 +89,21 @@ int main(void) {
         "test_geometry");
     resource_manager.load_resource<vq::graphics::core::Geometry>(
         "skybox_geometry");
-    resource_manager.load_resource<vq::graphics::core::Shader>(
+    resource_manager.load_resource<vq::graphics::shader::Shader>(
         "test_shader",
-        std::vector<vq::graphics::core::Shader::ShaderSourceFile>({
+        std::vector<vq::graphics::shader::Shader::ShaderSourceFile>({
             {s_base_resource_path + "shaders/passthrough.vert.glsl",
-             vq::graphics::core::Shader::ShaderSourceType::VERTEX},
+             vq::graphics::shader::Shader::ShaderSourceType::VERTEX},
             {s_base_resource_path + "shaders/passthrough.frag.glsl",
-             vq::graphics::core::Shader::ShaderSourceType::FRAGMENT},
+             vq::graphics::shader::Shader::ShaderSourceType::FRAGMENT},
         }));
-    resource_manager.load_resource<vq::graphics::core::Shader>(
+    resource_manager.load_resource<vq::graphics::shader::Shader>(
         "skybox_shader",
-        std::vector<vq::graphics::core::Shader::ShaderSourceFile>(
+        std::vector<vq::graphics::shader::Shader::ShaderSourceFile>(
             {{s_base_resource_path + "shaders/skybox.vert.glsl",
-              vq::graphics::core::Shader::ShaderSourceType::VERTEX},
+              vq::graphics::shader::Shader::ShaderSourceType::VERTEX},
              {s_base_resource_path + "shaders/skybox.frag.glsl",
-              vq::graphics::core::Shader::ShaderSourceType::FRAGMENT}}));
+              vq::graphics::shader::Shader::ShaderSourceType::FRAGMENT}}));
     resource_manager.load_resource<vq::graphics::texture::Texture2D>(
         "test_texture", s_base_resource_path + "textures/uv_test.png");
     resource_manager.load_resource<vq::graphics::texture::TextureCubeMap>(
@@ -121,10 +121,10 @@ int main(void) {
         resource_manager.get_resource<vq::graphics::core::Geometry>(
             "skybox_geometry");
     auto test_shader_handle =
-        resource_manager.get_resource<vq::graphics::core::Shader>(
+        resource_manager.get_resource<vq::graphics::shader::Shader>(
             "test_shader");
     auto skybox_shader_handle =
-        resource_manager.get_resource<vq::graphics::core::Shader>(
+        resource_manager.get_resource<vq::graphics::shader::Shader>(
             "skybox_shader");
     auto test_texture_handle =
         resource_manager.get_resource<vq::graphics::texture::Texture2D>(
@@ -248,7 +248,7 @@ int main(void) {
 
         vq::graphics::core::Geometry::unbind_all();
         vq::graphics::texture::Texture2D::unbind_all();
-        vq::graphics::core::Shader::unbind_all();
+        vq::graphics::shader::Shader::unbind_all();
     }
 }
 

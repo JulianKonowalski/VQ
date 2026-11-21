@@ -1,12 +1,12 @@
 #pragma once
 
 #include "vq/core/Resource.hpp"
-#include "vq/graphics/core/Uniform.hpp"
+#include "vq/graphics/shader/Uniform.hpp"
 
 #include <array>
 #include <vector>
 
-namespace vq::graphics::core {
+namespace vq::graphics::shader {
 
 /*----------------------------------------------------------------------------*/
 
@@ -53,4 +53,4 @@ class Shader final : public vq::core::Resource {
 
 /*----------------------------------------------------------------------------*/
 
-} // namespace vq::graphics::core
+} // namespace vq::graphics::shader
