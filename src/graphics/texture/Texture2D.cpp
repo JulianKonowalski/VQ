@@ -12,18 +12,17 @@ namespace vq::graphics::texture {
 /*----------------------------------------------------------------------------*/
 
 Texture2D::Texture2D(const std::string& id, const std::string& source_file)
-    : Texture<vq::graphics::core::TextureType::TEXTURE_2D>(id, {source_file}) {}
+    : TextureBase<TextureType::TEXTURE_2D>(id, {source_file}) {}
 
 /*----------------------------------------------------------------------------*/
 
 Texture2D::Texture2D(Texture2D&& other)
-    : Texture<vq::graphics::core::TextureType::TEXTURE_2D>(std::move(other)) {}
+    : TextureBase<TextureType::TEXTURE_2D>(std::move(other)) {}
 
 /*----------------------------------------------------------------------------*/
 
 Texture2D& Texture2D::operator=(Texture2D&& other) {
-    Texture<vq::graphics::core::TextureType::TEXTURE_2D>::operator=(
-        std::move(other));
+    TextureBase<TextureType::TEXTURE_2D>::operator=(std::move(other));
     return *this;
 }
 
@@ -38,10 +37,10 @@ bool Texture2D::do_load() noexcept {
     auto* const current_texture = Texture2D::get_current();
 
     this->bind();
-    this->set_wrap_s(vq::graphics::core::TextureWrapType::REPEAT);
-    this->set_wrap_t(vq::graphics::core::TextureWrapType::REPEAT);
-    this->set_filter_min(vq::graphics::core::TextureFilterType::LINEAR);
-    this->set_filter_mag(vq::graphics::core::TextureFilterType::LINEAR);
+    this->set_wrap_s(TextureWrapType::REPEAT);
+    this->set_wrap_t(TextureWrapType::REPEAT);
+    this->set_filter_min(TextureFilterType::LINEAR);
+    this->set_filter_mag(TextureFilterType::LINEAR);
 
     int width      = 0;
     int height     = 0;

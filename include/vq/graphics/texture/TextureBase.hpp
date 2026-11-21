@@ -4,7 +4,7 @@
 
 #include <vector>
 
-namespace vq::graphics::core {
+namespace vq::graphics::texture {
 
 /*----------------------------------------------------------------------------*/
 
@@ -23,17 +23,17 @@ enum class TextureFilterType { NEAREST, LINEAR };
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-class Texture : public vq::core::Resource {
+class TextureBase : public vq::core::Resource {
   public:
-    explicit Texture(const std::string& id,
-                     const std::vector<std::string>& source_files);
-    ~Texture() override = default;
+    explicit TextureBase(const std::string& id,
+                         const std::vector<std::string>& source_files);
+    ~TextureBase() override = default;
 
-    Texture(Texture<TType>&& other);
-    Texture<TType>& operator=(Texture<TType>&& other);
+    TextureBase(TextureBase<TType>&& other);
+    TextureBase<TType>& operator=(TextureBase<TType>&& other);
 
     static void unbind_all();
-    inline static Texture<TType>* const get_current();
+    inline static TextureBase<TType>* const get_current();
     inline static constexpr TextureType get_type();
 
     inline const std::vector<std::string>& get_source_files() const;
@@ -53,30 +53,30 @@ class Texture : public vq::core::Resource {
     unsigned int m_texture_id;
 
   private:
-    static Texture<TType>* s_current_texture;
+    static TextureBase<TType>* s_current_texture;
 };
 
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-Texture<TType>* Texture<TType>::s_current_texture = nullptr;
+TextureBase<TType>* TextureBase<TType>::s_current_texture = nullptr;
 
 template <TextureType TType>
-inline Texture<TType>* const Texture<TType>::get_current() {
+inline TextureBase<TType>* const TextureBase<TType>::get_current() {
     return s_current_texture;
 }
 
 template <TextureType TType>
-inline constexpr TextureType Texture<TType>::get_type() {
+inline constexpr TextureType TextureBase<TType>::get_type() {
     return TType;
 }
 
 template <TextureType TType>
 inline const std::vector<std::string>&
-Texture<TType>::get_source_files() const {
+TextureBase<TType>::get_source_files() const {
     return m_source_files;
 }
 
 /*----------------------------------------------------------------------------*/
 
-} // namespace vq::graphics::core
+} // namespace vq::graphics::texture

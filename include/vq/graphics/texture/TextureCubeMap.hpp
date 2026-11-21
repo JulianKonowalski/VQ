@@ -1,14 +1,12 @@
 #pragma once
 
-#include "vq/graphics/core/Texture.hpp"
+#include "vq/graphics/texture/TextureBase.hpp"
 
 namespace vq::graphics::texture {
 
 /*----------------------------------------------------------------------------*/
 
-class TextureCubeMap final
-    : public vq::graphics::core::Texture<
-          vq::graphics::core::TextureType::TEXTURE_CUBE_MAP> {
+class TextureCubeMap final : public TextureBase<TextureType::TEXTURE_CUBE_MAP> {
   public:
     explicit TextureCubeMap(const std::string& id,
                             const std::string& source_file_right,

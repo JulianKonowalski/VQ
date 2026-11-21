@@ -14,7 +14,7 @@ TextureCubeMap::TextureCubeMap(const std::string& id,
                                const std::string& source_file_bottom,
                                const std::string& source_file_front,
                                const std::string& source_file_back)
-    : Texture<vq::graphics::core::TextureType::TEXTURE_CUBE_MAP>(
+    : TextureBase<TextureType::TEXTURE_CUBE_MAP>(
           id, std::vector<std::string>(
                   {source_file_right, source_file_left, source_file_top,
                    source_file_bottom, source_file_front, source_file_back})) {}
@@ -22,14 +22,12 @@ TextureCubeMap::TextureCubeMap(const std::string& id,
 /*----------------------------------------------------------------------------*/
 
 TextureCubeMap::TextureCubeMap(TextureCubeMap&& other)
-    : Texture<vq::graphics::core::TextureType::TEXTURE_CUBE_MAP>(
-          std::move(other)) {}
+    : TextureBase<TextureType::TEXTURE_CUBE_MAP>(std::move(other)) {}
 
 /*----------------------------------------------------------------------------*/
 
 TextureCubeMap& TextureCubeMap::operator=(TextureCubeMap&& other) {
-    Texture<vq::graphics::core::TextureType::TEXTURE_CUBE_MAP>::operator=(
-        std::move(other));
+    TextureBase<TextureType::TEXTURE_CUBE_MAP>::operator=(std::move(other));
     return *this;
 }
 
@@ -44,11 +42,11 @@ bool TextureCubeMap::do_load() noexcept {
     auto* const current_texture = TextureCubeMap::get_current();
 
     this->bind();
-    this->set_wrap_s(vq::graphics::core::TextureWrapType::CLAMP_TO_EDGE);
-    this->set_wrap_t(vq::graphics::core::TextureWrapType::CLAMP_TO_EDGE);
-    this->set_wrap_r(vq::graphics::core::TextureWrapType::CLAMP_TO_EDGE);
-    this->set_filter_min(vq::graphics::core::TextureFilterType::LINEAR);
-    this->set_filter_mag(vq::graphics::core::TextureFilterType::LINEAR);
+    this->set_wrap_s(TextureWrapType::CLAMP_TO_EDGE);
+    this->set_wrap_t(TextureWrapType::CLAMP_TO_EDGE);
+    this->set_wrap_r(TextureWrapType::CLAMP_TO_EDGE);
+    this->set_filter_min(TextureFilterType::LINEAR);
+    this->set_filter_mag(TextureFilterType::LINEAR);
 
     int width           = 0;
     int height          = 0;
