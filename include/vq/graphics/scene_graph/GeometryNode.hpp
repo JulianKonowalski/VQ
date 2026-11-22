@@ -2,13 +2,13 @@
 
 #include "vq/core/Resource.hpp"
 #include "vq/graphics/geometry/Geometry.hpp"
-#include "vq/graphics/scene_graph/NodeBase.hpp"
+#include "vq/graphics/scene_graph/INode.hpp"
 
 namespace vq::graphics::scene_graph {
 
 /*----------------------------------------------------------------------------*/
 
-class GeometryNode final : public NodeBase {
+class GeometryNode final : public INode {
   public:
     GeometryNode(
         core::ResourceHandle<geometry::Geometry>&& geometry_resource_handle,

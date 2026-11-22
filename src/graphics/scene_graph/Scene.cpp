@@ -12,8 +12,8 @@ Scene::~Scene() {}
 
 /*----------------------------------------------------------------------------*/
 
-NodeBase* Scene::find_node(const std::string& name) {
-    auto traverse = [&](const auto& self, NodeBase* p_node) -> NodeBase* {
+INode* Scene::find_node(const std::string& name) {
+    auto traverse = [&](const auto& self, INode* p_node) -> INode* {
         if (!p_node) {
             return nullptr;
         }
@@ -21,7 +21,7 @@ NodeBase* Scene::find_node(const std::string& name) {
             return p_node;
         }
         for (auto* p_child : p_node->get_children()) {
-            NodeBase* p_result = self(self, p_child);
+            INode* p_result = self(self, p_child);
             if (p_result) {
                 return p_result;
             }

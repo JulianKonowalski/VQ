@@ -1,14 +1,14 @@
-#include "vq/graphics/scene_graph/NodeBase.hpp"
+#include "vq/graphics/scene_graph/INode.hpp"
 
 namespace vq::graphics::scene_graph {
 
 /*----------------------------------------------------------------------------*/
 
-NodeBase::NodeBase(const std::string& name) : m_name(name) {}
+INode::INode(const std::string& name) : m_name(name) {}
 
 /*----------------------------------------------------------------------------*/
 
-NodeBase::~NodeBase() {
+INode::~INode() {
     /**
      * TODO:
      * holy memory leaks
@@ -18,7 +18,7 @@ NodeBase::~NodeBase() {
 
 /*----------------------------------------------------------------------------*/
 
-bool NodeBase::attach_child(NodeBase* p_child) {
+bool INode::attach_child(INode* p_child) {
     auto it = std::find(m_children.begin(), m_children.end(), p_child);
     if (it != m_children.end()) {
         return false;
@@ -29,7 +29,7 @@ bool NodeBase::attach_child(NodeBase* p_child) {
 
 /*----------------------------------------------------------------------------*/
 
-bool NodeBase::detach_child(NodeBase* p_child) {
+bool INode::detach_child(INode* p_child) {
     auto it = std::find(m_children.begin(), m_children.end(), p_child);
     if (it == m_children.end()) {
         return false;
