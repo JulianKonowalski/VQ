@@ -8,13 +8,13 @@ namespace vq::graphics::geometry {
 /*----------------------------------------------------------------------------*/
 
 Geometry::Geometry(const std::string& id, const std::string& source_file_path)
-    : core::Resource(id), m_source_file(source_file_path),
+    : core::resource::IResource(id), m_source_file(source_file_path),
       m_attribute_sizes({0}), m_indices_size(0), m_attributes({0}),
       m_vertex_array(0), m_index_array(0) {}
 
 /*----------------------------------------------------------------------------*/
 
-Geometry::Geometry(Geometry&& other) : core::Resource("") {
+Geometry::Geometry(Geometry&& other) : core::resource::IResource("") {
     *this = std::move(other);
 }
 
@@ -30,7 +30,7 @@ Geometry& Geometry::operator=(Geometry&& other) {
     m_index_array        = other.m_index_array;
     other.m_vertex_array = 0;
     other.m_index_array  = 0;
-    core::Resource::operator=(std::move(other));
+    core::resource::IResource::operator=(std::move(other));
     return *this;
 }
 

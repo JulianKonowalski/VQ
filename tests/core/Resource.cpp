@@ -1,4 +1,5 @@
-#include "vq/core/Resource.hpp"
+#include "vq/core/resource/IResource.hpp"
+#include "vq/core/resource/ResourceManager.hpp"
 
 #include <gtest/gtest.h>
 
@@ -6,18 +7,18 @@ namespace vq::tests::core::Resource {
 
 /*----------------------------------------------------------------------------*/
 
-class MockResource : public vq::core::Resource {
+class MockResource : public vq::core::resource::IResource {
   public:
     explicit MockResource(const std::string& id)
-        : vq::core::Resource(id), m_is_reloaded(false) {}
+        : vq::core::resource::IResource(id), m_is_reloaded(false) {}
     ~MockResource() override = default;
 
-    MockResource(MockResource&& other) : vq::core::Resource("") {
+    MockResource(MockResource&& other) : vq::core::resource::IResource("") {
         *this = std::move(other);
     }
 
     MockResource& operator=(MockResource&& other) {
-        vq::core::Resource::operator=(std::move(other));
+        vq::core::resource::IResource::operator=(std::move(other));
         return *this;
     }
 
@@ -35,18 +36,19 @@ class MockResource : public vq::core::Resource {
     bool m_is_reloaded;
 };
 
-class MockResourceEmpty : public vq::core::Resource {
+class MockResourceEmpty : public vq::core::resource::IResource {
   public:
     explicit MockResourceEmpty(const std::string& id)
-        : vq::core::Resource(id) {}
+        : vq::core::resource::IResource(id) {}
     ~MockResourceEmpty() override = default;
 
-    MockResourceEmpty(MockResourceEmpty&& other) : vq::core::Resource("") {
+    MockResourceEmpty(MockResourceEmpty&& other)
+        : vq::core::resource::IResource("") {
         *this = std::move(other);
     }
 
     MockResourceEmpty& operator=(MockResourceEmpty&& other) {
-        vq::core::Resource::operator=(std::move(other));
+        vq::core::resource::IResource::operator=(std::move(other));
         return *this;
     }
 
@@ -56,20 +58,20 @@ class MockResourceEmpty : public vq::core::Resource {
     void do_unload() noexcept override {}
 };
 
-class MockResourceWithTestValue : public vq::core::Resource {
+class MockResourceWithTestValue : public vq::core::resource::IResource {
   public:
     explicit MockResourceWithTestValue(const std::string& id,
                                        const int test_value)
-        : vq::core::Resource(id), m_test_value(test_value) {}
+        : vq::core::resource::IResource(id), m_test_value(test_value) {}
     ~MockResourceWithTestValue() override = default;
 
     MockResourceWithTestValue(MockResourceWithTestValue&& other)
-        : vq::core::Resource("") {
+        : vq::core::resource::IResource("") {
         *this = std::move(other);
     }
 
     MockResourceWithTestValue& operator=(MockResourceWithTestValue&& other) {
-        vq::core::Resource::operator=(std::move(other));
+        vq::core::resource::IResource::operator=(std::move(other));
         return *this;
     }
 
@@ -137,7 +139,7 @@ TEST(Core_Resource, resource_load_reload_and_unload_are_called) {
 /*----------------------------------------------------------------------------*/
 
 TEST(Core_Resource, resource_manager_loads_resource) {
-    auto resource_manager = vq::core::ResourceManager::get_instance();
+    auto resource_manager = vq::core::resource::ResourceManager::get_instance();
     ASSERT_TRUE(resource_manager.load_resource<MockResourceEmpty>(
         "test_loads_resource_1"));
     ASSERT_FALSE(resource_manager.load_resource<MockResourceEmpty>(
@@ -152,7 +154,7 @@ TEST(Core_Resource, resource_manager_loads_resource) {
 /*----------------------------------------------------------------------------*/
 
 TEST(Core_Resource, resource_manager_gets_resource) {
-    auto resource_manager = vq::core::ResourceManager::get_instance();
+    auto resource_manager = vq::core::resource::ResourceManager::get_instance();
 
     auto resource_handle =
         resource_manager.get_resource<MockResourceWithTestValue>(
@@ -170,7 +172,7 @@ TEST(Core_Resource, resource_manager_gets_resource) {
 /*----------------------------------------------------------------------------*/
 
 TEST(Core_Resource, resource_manager_modifies_resource) {
-    auto resource_manager = vq::core::ResourceManager::get_instance();
+    auto resource_manager = vq::core::resource::ResourceManager::get_instance();
 
     resource_manager.load_resource<MockResourceWithTestValue>(
         "test_modifies_resource", 1);
@@ -201,7 +203,7 @@ TEST(Core_Resource, resource_manager_modifies_resource) {
  * unused resources
  */
 TEST(Core_Resource, resource_manager_deletes_unreferenced_resource) {
-    auto resource_manager = vq::core::ResourceManager::get_instance();
+    auto resource_manager = vq::core::resource::ResourceManager::get_instance();
 
     resource_manager.load_resource<MockResourceEmpty>(
         "test_deletes_unreferenced_resource");

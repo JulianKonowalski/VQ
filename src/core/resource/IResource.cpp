@@ -1,18 +1,18 @@
-#include "vq/core/Resource.hpp"
+#include "vq/core/resource/IResource.hpp"
 
-namespace vq::core {
-
-/*----------------------------------------------------------------------------*/
-
-Resource::Resource(const std::string& id) : m_id(id), m_is_loaded(false) {}
+namespace vq::core::resource {
 
 /*----------------------------------------------------------------------------*/
 
-Resource::Resource(Resource&& other) { *this = std::move(other); }
+IResource::IResource(const std::string& id) : m_id(id), m_is_loaded(false) {}
 
 /*----------------------------------------------------------------------------*/
 
-Resource& Resource::operator=(Resource&& other) {
+IResource::IResource(IResource&& other) { *this = std::move(other); }
+
+/*----------------------------------------------------------------------------*/
+
+IResource& IResource::operator=(IResource&& other) {
     m_id        = std::move(other.m_id);
     m_is_loaded = other.m_is_loaded;
     return *this;
@@ -20,7 +20,7 @@ Resource& Resource::operator=(Resource&& other) {
 
 /*----------------------------------------------------------------------------*/
 
-bool Resource::load() {
+bool IResource::load() {
     if (m_is_loaded) {
         return true;
     }
@@ -35,7 +35,7 @@ bool Resource::load() {
 
 /*----------------------------------------------------------------------------*/
 
-bool Resource::reload() {
+bool IResource::reload() {
     if (!m_is_loaded) {
         return false;
     }
@@ -50,7 +50,7 @@ bool Resource::reload() {
 
 /*----------------------------------------------------------------------------*/
 
-void Resource::unload() {
+void IResource::unload() {
     if (!m_is_loaded) {
         return;
     }
@@ -62,11 +62,4 @@ void Resource::unload() {
 
 /*----------------------------------------------------------------------------*/
 
-ResourceManager& ResourceManager::get_instance() {
-    static ResourceManager resource_manager;
-    return resource_manager;
-}
-
-/*----------------------------------------------------------------------------*/
-
-} // namespace vq::core
+} // namespace vq::core::resource

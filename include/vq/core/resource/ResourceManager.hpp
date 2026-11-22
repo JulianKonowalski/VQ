@@ -1,100 +1,43 @@
 #pragma once
 
-#include "vq/core/TypeId.hpp"
-#include "vq/core/event/EventEmitter.hpp"
-#include "vq/core/event/IEvent.hpp"
+#include "vq/core/resource/IResource.hpp"
 
 #include <memory>
 #include <stdexcept>
-#include <string>
 #include <type_traits>
 #include <unordered_map>
 
-namespace vq::core {
-
-/*----------------------------------------------------------------------------*/
-
-class Resource;
-
-struct ResourceLoadEvent : public event::IEvent {
-    ResourceLoadEvent(Resource& resource) : resource(resource) {}
-    Resource& resource;
-};
-
-struct ResourceReloadEvent : public event::IEvent {
-    ResourceReloadEvent(Resource& resource) : resource(resource) {}
-    Resource& resource;
-};
-
-struct ResourceUnloadEvent : public event::IEvent {
-    ResourceUnloadEvent(Resource& resource) : resource(resource) {}
-    Resource& resource;
-};
-
-/*----------------------------------------------------------------------------*/
-
-class Resource
-    : public event::EventEmitter<ResourceLoadEvent, ResourceReloadEvent,
-                                 ResourceUnloadEvent> {
-  public:
-    explicit Resource(const std::string& id);
-    virtual ~Resource() = default;
-
-    Resource(Resource&& other);
-    Resource& operator=(Resource&& other);
-
-    Resource(const Resource&)            = delete;
-    Resource& operator=(const Resource&) = delete;
-
-    template <typename ChildType>
-    static inline size_t get_type_id();
-
-    inline bool is_loaded() const;
-    inline const std::string& get_id() const;
-
-    bool load();
-    bool reload();
-    void unload();
-
-  protected:
-    virtual bool do_load() noexcept   = 0;
-    virtual bool do_reload() noexcept = 0;
-    virtual void do_unload() noexcept = 0;
-
-  private:
-    std::string m_id;
-    bool m_is_loaded;
-};
+namespace vq::core::resource {
 
 /*----------------------------------------------------------------------------*/
 
 template <typename ResourceType>
 class ResourceHandle {
-    static_assert(std::is_base_of_v<Resource, ResourceType>,
-                  "ResourceType must derive from vq::core::Resource");
+    static_assert(
+        std::is_base_of_v<IResource, ResourceType>,
+        "ResourceType must derive from vq::core::resource::IResource");
+
+    using ThisType = ResourceHandle<ResourceType>;
 
     friend class ResourceManager;
 
   public:
     ~ResourceHandle();
 
-    ResourceHandle(ResourceHandle<ResourceType>&& other);
-    ResourceHandle(const ResourceHandle<ResourceType>& other);
+    ResourceHandle(ThisType&& other);
+    ResourceHandle(const ThisType& other);
 
-    ResourceHandle<ResourceType>&
-    operator=(ResourceHandle<ResourceType>&& other);
-
-    ResourceHandle<ResourceType>&
-    operator=(const ResourceHandle<ResourceType>& other);
+    ThisType& operator=(ThisType&& other);
+    ThisType& operator=(const ThisType& other);
 
     inline bool is_valid() const;
     inline ResourceType& get() const;
 
   private:
-    ResourceHandle(const std::shared_ptr<Resource>& resource,
+    ResourceHandle(const std::shared_ptr<IResource>& resource,
                    ResourceManager& resource_manager);
 
-    std::shared_ptr<Resource> m_resource;
+    std::shared_ptr<IResource> m_resource;
     ResourceManager& m_resource_manager;
 };
 
@@ -114,6 +57,7 @@ class ResourceManager {
 
     template <typename ResourceType, typename... Args>
     bool load_resource(const std::string& resource_id, Args&&... args);
+
     template <typename ResourceType>
     ResourceHandle<ResourceType> get_resource(const std::string& resource_id);
 
@@ -124,26 +68,15 @@ class ResourceManager {
     ResourceManager() = default;
 
     std::unordered_map<
-        size_t, std::unordered_map<std::string, std::shared_ptr<Resource>>>
+        size_t, std::unordered_map<std::string, std::shared_ptr<IResource>>>
         m_resources;
 };
 
 /*----------------------------------------------------------------------------*/
 
-template <typename ChildType>
-inline size_t Resource::get_type_id() {
-    return TypeId<Resource>::get_type_id<ChildType>();
-}
-
-inline bool Resource::is_loaded() const { return m_is_loaded; }
-
-inline const std::string& Resource::get_id() const { return m_id; }
-
-/*----------------------------------------------------------------------------*/
-
 template <typename ResourceType>
 ResourceHandle<ResourceType>::ResourceHandle(
-    const std::shared_ptr<Resource>& resource,
+    const std::shared_ptr<IResource>& resource,
     ResourceManager& resource_manager)
     : m_resource(resource), m_resource_manager(resource_manager) {
     // don't throw on nullptr !
@@ -161,28 +94,26 @@ ResourceHandle<ResourceType>::~ResourceHandle() {
 }
 
 template <typename ResourceType>
-ResourceHandle<ResourceType>::ResourceHandle(
-    ResourceHandle<ResourceType>&& other)
+ResourceHandle<ResourceType>::ResourceHandle(ThisType&& other)
     : m_resource(std::move(other.m_resource)),
       m_resource_manager(other.m_resource_manager) {}
 
 template <typename ResourceType>
-ResourceHandle<ResourceType>::ResourceHandle(
-    const ResourceHandle<ResourceType>& other)
+ResourceHandle<ResourceType>::ResourceHandle(const ThisType& other)
     : m_resource(other.m_resource),
       m_resource_manager(other.m_resource_manager) {}
 
 template <typename ResourceType>
 ResourceHandle<ResourceType>&
-ResourceHandle<ResourceType>::operator=(ResourceHandle<ResourceType>&& other) {
+ResourceHandle<ResourceType>::operator=(ThisType&& other) {
     m_resource         = std::move(other.m_resource);
     m_resource_manager = other.m_resource_manager;
     return *this;
 }
 
 template <typename ResourceType>
-ResourceHandle<ResourceType>& ResourceHandle<ResourceType>::operator=(
-    const ResourceHandle<ResourceType>& other) {
+ResourceHandle<ResourceType>&
+ResourceHandle<ResourceType>::operator=(const ThisType& other) {
     m_resource         = other.m_resource;
     m_resource_manager = other.m_resource_manager;
     return *this;
@@ -213,7 +144,7 @@ bool ResourceManager::load_resource(const std::string& resource_id,
         return false;
     }
 
-    m_resources[Resource::get_type_id<ResourceType>()].insert(
+    m_resources[IResource::get_type_id<ResourceType>()].insert(
         {resource_id, resource});
     return true;
 }
@@ -221,13 +152,13 @@ bool ResourceManager::load_resource(const std::string& resource_id,
 template <typename ResourceType>
 ResourceHandle<ResourceType>
 ResourceManager::get_resource(const std::string& resource_id) {
-    auto& resource_map = m_resources[Resource::get_type_id<ResourceType>()];
+    auto& resource_map = m_resources[IResource::get_type_id<ResourceType>()];
     auto it            = resource_map.find(resource_id);
 
     return it != resource_map.end()
                ? std::move(ResourceHandle<ResourceType>(it->second, *this))
                : std::move(ResourceHandle<ResourceType>(
-                     std::shared_ptr<Resource>(nullptr), *this));
+                     std::shared_ptr<IResource>(nullptr), *this));
 }
 
 template <typename ResourceType>
@@ -237,7 +168,7 @@ void ResourceManager::release_handle(
         return;
     }
 
-    auto& resource_map = m_resources[Resource::get_type_id<ResourceType>()];
+    auto& resource_map = m_resources[IResource::get_type_id<ResourceType>()];
     auto it            = resource_map.find(resource_handle.get().get_id());
     if (it == resource_map.end()) {
         return;
@@ -252,4 +183,4 @@ void ResourceManager::release_handle(
 
 /*----------------------------------------------------------------------------*/
 
-} // namespace vq::core
+} // namespace vq::core::resource

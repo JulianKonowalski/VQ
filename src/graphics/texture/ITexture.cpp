@@ -34,13 +34,13 @@ struct TextureTypeLUT<TextureType::TEXTURE_CUBE_MAP> {
 template <TextureType TType>
 ITexture<TType>::ITexture(const std::string& id,
                           const std::vector<std::string>& source_files)
-    : Resource(id), m_source_files(source_files), m_texture_id(0) {}
+    : IResource(id), m_source_files(source_files), m_texture_id(0) {}
 
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
 ITexture<TType>::ITexture(ITexture<TType>&& other)
-    : Resource(std::move(other)),
+    : IResource(std::move(other)),
       m_source_files(std::move(other.m_source_files)),
       m_texture_id(other.m_texture_id) {
     other.m_texture_id = 0;
@@ -55,7 +55,7 @@ ITexture<TType>& ITexture<TType>::operator=(ITexture<TType>&& other) {
     m_texture_id       = other.m_texture_id;
     other.m_texture_id = 0;
     s_current_texture  = s_current_texture == &other ? this : s_current_texture;
-    Resource::operator=(std::move(other));
+    IResource::operator=(std::move(other));
     return *this;
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vq/core/Resource.hpp"
+#include "vq/core/resource/IResource.hpp"
 #include "vq/graphics/shader/Uniform.hpp"
 
 #include <array>
@@ -10,7 +10,7 @@ namespace vq::graphics::shader {
 
 /*----------------------------------------------------------------------------*/
 
-class Shader final : public vq::core::Resource {
+class Shader final : public vq::core::resource::IResource {
   public:
     enum class ShaderSourceType : uint8_t { VERTEX, FRAGMENT };
 

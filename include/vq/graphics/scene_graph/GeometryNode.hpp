@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vq/core/Resource.hpp"
+#include "vq/core/resource/ResourceManager.hpp"
 #include "vq/graphics/geometry/Geometry.hpp"
 #include "vq/graphics/scene_graph/INode.hpp"
 
@@ -10,9 +10,9 @@ namespace vq::graphics::scene_graph {
 
 class GeometryNode final : public INode {
   public:
-    GeometryNode(
-        core::ResourceHandle<geometry::Geometry>&& geometry_resource_handle,
-        const std::string& name);
+    GeometryNode(core::resource::ResourceHandle<geometry::Geometry>&&
+                     geometry_resource_handle,
+                 const std::string& name);
     ~GeometryNode() override = default;
 
     /** TODO: implement this */
@@ -24,7 +24,8 @@ class GeometryNode final : public INode {
     inline const geometry::Geometry& get_geometry() const;
 
   private:
-    const core::ResourceHandle<geometry::Geometry> m_geometry_resource_handle;
+    const core::resource::ResourceHandle<geometry::Geometry>
+        m_geometry_resource_handle;
 };
 
 /*----------------------------------------------------------------------------*/

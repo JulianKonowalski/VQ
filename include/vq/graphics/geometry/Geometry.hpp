@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vq/core/Resource.hpp"
+#include "vq/core/resource/IResource.hpp"
 
 #include <array>
 #include <cstdint>
@@ -10,7 +10,7 @@ namespace vq::graphics::geometry {
 
 /*----------------------------------------------------------------------------*/
 
-class Geometry : public core::Resource {
+class Geometry : public core::resource::IResource {
   public:
     enum class Attribute : uint8_t {
         POSITION = 0,

@@ -1,5 +1,5 @@
 #include <glad/glad.h>
-#include <vq/core/Resource.hpp>
+#include <vq/core/resource/ResourceManager.hpp>
 #include <vq/graphics/geometry/Geometry.hpp>
 #include <vq/graphics/shader/Shader.hpp>
 #include <vq/graphics/texture/Texture2D.hpp>
@@ -46,7 +46,8 @@ class WindowKeyHandler
                 0.1f, view_transform.get_right_vector());
             event.set_handled();
         } else if (event.key == 82) { // GLFW KEY R
-            auto& resource_manager = vq::core::ResourceManager::get_instance();
+            auto& resource_manager =
+                vq::core::resource::ResourceManager::get_instance();
             auto shader_handle =
                 resource_manager.get_resource<vq::graphics::shader::Shader>(
                     "test_shader");
@@ -83,7 +84,8 @@ int main(void) {
     window.attach_event_handler(key_handler);
     window.attach_event_handler(mouse_handler);
 
-    auto& resource_manager = vq::core::ResourceManager::get_instance();
+    auto& resource_manager =
+        vq::core::resource::ResourceManager::get_instance();
 
     resource_manager.load_resource<vq::graphics::geometry::Geometry>(
         "test_geometry");

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "vq/core/Resource.hpp"
 #include "vq/core/event/EventHandler.hpp"
+#include "vq/core/resource/IResource.hpp"
 
 namespace vq::graphics::shader {
 
 /*----------------------------------------------------------------------------*/
 
 template <typename ValueType>
-class Uniform final
-    : public vq::core::event::EventHandler<vq::core::ResourceReloadEvent> {
+class Uniform final : public vq::core::event::EventHandler<
+                          vq::core::resource::ResourceReloadEvent> {
 
     friend class Shader;
 
@@ -22,7 +22,8 @@ class Uniform final
     Uniform<ValueType>& operator=(Uniform<ValueType>&& other);
     Uniform<ValueType>& operator=(const Uniform<ValueType>& other);
 
-    void handle(vq::core::ResourceReloadEvent& event) noexcept override;
+    void
+    handle(vq::core::resource::ResourceReloadEvent& event) noexcept override;
     void set_value(const ValueType& value);
 
   private:

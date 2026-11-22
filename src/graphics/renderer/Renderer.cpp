@@ -1,6 +1,6 @@
 #include "vq/graphics/renderer/Renderer.hpp"
 
-#include "vq/core/Resource.hpp"
+#include "vq/core/resource/ResourceManager.hpp"
 #include "vq/graphics/scene_graph/GeometryNode.hpp"
 #include "vq/graphics/scene_graph/ITransformNode.hpp"
 #include "vq/graphics/shader/Shader.hpp"
@@ -17,7 +17,7 @@ static const std::string s_base_resource_path = VQ_RESOURCE_PATH;
 /*----------------------------------------------------------------------------*/
 
 Renderer::Renderer() {
-    auto& resource_manager = core::ResourceManager::get_instance();
+    auto& resource_manager = core::resource::ResourceManager::get_instance();
     resource_manager.load_resource<shader::Shader>(
         "pbr_master_shader",
         std::vector<shader::Shader::ShaderSourceFile>({
@@ -37,10 +37,9 @@ Renderer::Renderer() {
  * shader etc
  */
 void Renderer::render(scene_graph::Scene& scene) {
-    auto* root_node = scene.get_root_node();
-    auto shader_handle =
-        core::ResourceManager::get_instance().get_resource<shader::Shader>(
-            "pbr_master_shader");
+    auto* root_node    = scene.get_root_node();
+    auto shader_handle = core::resource::ResourceManager::get_instance()
+                             .get_resource<shader::Shader>("pbr_master_shader");
     auto model_matrix_uniform =
         shader_handle.get().get_uniform<glm::mat4>("u_model_matrix");
 

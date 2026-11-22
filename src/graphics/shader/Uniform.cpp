@@ -53,7 +53,8 @@ Uniform<ValueType>::operator=(const Uniform<ValueType>& other) {
 /*----------------------------------------------------------------------------*/
 
 template <typename ValueType>
-void Uniform<ValueType>::handle(vq::core::ResourceReloadEvent& event) noexcept {
+void Uniform<ValueType>::handle(
+    vq::core::resource::ResourceReloadEvent& event) noexcept {
     auto* p_shader =
         dynamic_cast<vq::graphics::shader::Shader*>(&event.resource);
     if (p_shader) {

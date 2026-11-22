@@ -34,12 +34,12 @@ void cleanup_gl_shaders(unsigned int& gl_program_id,
 
 Shader::Shader(const std::string& id,
                std::vector<ShaderSourceFile>& source_files)
-    : vq::core::Resource(id), m_source_files(std::move(source_files)),
-      m_shader_id(0) {}
+    : vq::core::resource::IResource(id),
+      m_source_files(std::move(source_files)), m_shader_id(0) {}
 
 /*----------------------------------------------------------------------------*/
 
-Shader::Shader(Shader&& other) : vq::core::Resource("") {
+Shader::Shader(Shader&& other) : vq::core::resource::IResource("") {
     *this = std::move(other);
 }
 
@@ -49,7 +49,7 @@ Shader& Shader::operator=(Shader&& other) {
     m_source_files    = std::move(other.m_source_files);
     m_shader_id       = other.m_shader_id;
     other.m_shader_id = 0;
-    vq::core::Resource::operator=(std::move(other));
+    vq::core::resource::IResource::operator=(std::move(other));
     return *this;
 }
 
@@ -64,7 +64,8 @@ Uniform<UniformValueType> Shader::get_uniform(const std::string& uniform_id) {
     const unsigned int uniform_location =
         glGetUniformLocation(m_shader_id, uniform_id.c_str());
     Uniform<UniformValueType> uniform(uniform_id, uniform_location);
-    this->attach_event_handler<vq::core::ResourceReloadEvent>(uniform);
+    this->attach_event_handler<vq::core::resource::ResourceReloadEvent>(
+        uniform);
     return std::move(uniform);
 }
 

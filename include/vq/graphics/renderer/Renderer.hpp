@@ -1,6 +1,5 @@
 #pragma once
 
-#include "vq/core/Resource.hpp"
 #include "vq/graphics/scene_graph/Scene.hpp"
 #include "vq/graphics/shader/Shader.hpp"
 

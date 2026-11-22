@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vq/core/Resource.hpp"
+#include "vq/core/resource/IResource.hpp"
 
 #include <vector>
 
@@ -23,7 +23,7 @@ enum class TextureFilterType { NEAREST, LINEAR };
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-class ITexture : public vq::core::Resource {
+class ITexture : public vq::core::resource::IResource {
   public:
     explicit ITexture(const std::string& id,
                       const std::vector<std::string>& source_files);
