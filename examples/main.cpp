@@ -1,5 +1,4 @@
 #include <glad/glad.h>
-#include <vq/core/Event.hpp>
 #include <vq/core/Resource.hpp>
 #include <vq/graphics/geometry/Geometry.hpp>
 #include <vq/graphics/shader/Shader.hpp>
@@ -23,7 +22,8 @@ static vq::graphics::transform::ViewTransform view_transform(view_rotation,
 
 /*----------------------------------------------------------------------------*/
 
-class WindowKeyHandler : public vq::core::EventHandler<vq::io::KeyEvent> {
+class WindowKeyHandler
+    : public vq::core::event::EventHandler<vq::io::KeyEvent> {
   public:
     void handle(vq::io::KeyEvent& event) noexcept override {
         if (event.key == 256) { // GLFW KEY ESC
@@ -59,7 +59,7 @@ class WindowKeyHandler : public vq::core::EventHandler<vq::io::KeyEvent> {
 };
 
 class WindowMouseHandler
-    : public vq::core::EventHandler<vq::io::MouseDragEvent> {
+    : public vq::core::event::EventHandler<vq::io::MouseDragEvent> {
   public:
     void handle(vq::io::MouseDragEvent& event) noexcept override {
         view_rotation.rotate_on_axis_degrees(0.05f * event.y_position_delta,

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "vq/core/Event.hpp"
+#include "vq/core/event/EventEmitter.hpp"
+#include "vq/core/event/IEvent.hpp"
 
 #include <cstdint>
 
@@ -12,7 +13,7 @@ class Window;
 
 /*----------------------------------------------------------------------------*/
 
-struct KeyEvent : public vq::core::EventBase {
+struct KeyEvent : public vq::core::event::IEvent {
     explicit KeyEvent(Window& window, int key, int scancode, int action,
                       int mods)
         : window(window), key(key), scancode(scancode), action(action),
@@ -25,7 +26,7 @@ struct KeyEvent : public vq::core::EventBase {
     const int mods;
 };
 
-struct MouseScrollEvent : public vq::core::EventBase {
+struct MouseScrollEvent : public vq::core::event::IEvent {
     explicit MouseScrollEvent(Window& window, double scroll_x_offset,
                               double scroll_y_offset)
         : window(window), scroll_x_offset(scroll_x_offset),
@@ -36,7 +37,7 @@ struct MouseScrollEvent : public vq::core::EventBase {
     const double scroll_y_offset;
 };
 
-struct MouseButtonEvent : public vq::core::EventBase {
+struct MouseButtonEvent : public vq::core::event::IEvent {
     explicit MouseButtonEvent(Window& window, int button, int action, int mods)
         : window(window), button(button), action(action), mods(mods) {}
 
@@ -46,7 +47,7 @@ struct MouseButtonEvent : public vq::core::EventBase {
     const int mods;
 };
 
-struct MouseMoveEvent : public vq::core::EventBase {
+struct MouseMoveEvent : public vq::core::event::IEvent {
     explicit MouseMoveEvent(Window& window, const double x_position_delta,
                             const double y_position_delta)
         : window(window), x_position_delta(x_position_delta),
@@ -57,7 +58,7 @@ struct MouseMoveEvent : public vq::core::EventBase {
     const double y_position_delta;
 };
 
-struct MouseDragEvent : public vq::core::EventBase {
+struct MouseDragEvent : public vq::core::event::IEvent {
     explicit MouseDragEvent(Window& window, const double x_position_delta,
                             const double y_position_delta)
         : window(window), x_position_delta(x_position_delta),
@@ -68,7 +69,7 @@ struct MouseDragEvent : public vq::core::EventBase {
     const double y_position_delta;
 };
 
-struct WindowResizeEvent : public vq::core::EventBase {
+struct WindowResizeEvent : public vq::core::event::IEvent {
     explicit WindowResizeEvent(Window& window, int width, int height)
         : window(window), width(width), height(height) {}
 
@@ -80,9 +81,9 @@ struct WindowResizeEvent : public vq::core::EventBase {
 /*----------------------------------------------------------------------------*/
 
 class Window final
-    : public vq::core::EventEmitter<KeyEvent, MouseScrollEvent,
-                                    MouseButtonEvent, MouseMoveEvent,
-                                    MouseDragEvent, WindowResizeEvent> {
+    : public vq::core::event::EventEmitter<KeyEvent, MouseScrollEvent,
+                                           MouseButtonEvent, MouseMoveEvent,
+                                           MouseDragEvent, WindowResizeEvent> {
   public:
     struct WindowSpecification {
         WindowSpecification()

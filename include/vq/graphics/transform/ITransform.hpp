@@ -1,6 +1,7 @@
 #pragma once
 
-#include "vq/core/Event.hpp"
+#include "vq/core/event/EventEmitter.hpp"
+#include "vq/core/event/IEvent.hpp"
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
@@ -13,19 +14,19 @@ class ITransform;
 
 /*----------------------------------------------------------------------------*/
 
-struct TransformChangeEvent final : public vq::core::EventBase {
+struct TransformChangeEvent final : public vq::core::event::IEvent {
     explicit TransformChangeEvent(ITransform& transform)
         : transform(transform) {}
     ITransform& transform;
 };
 
-struct TransformResetEvent final : public vq::core::EventBase {
+struct TransformResetEvent final : public vq::core::event::IEvent {
     explicit TransformResetEvent(ITransform& transform)
         : transform(transform) {}
     ITransform& transform;
 };
 
-struct TransformUpdateEvent final : public vq::core::EventBase {
+struct TransformUpdateEvent final : public vq::core::event::IEvent {
     explicit TransformUpdateEvent(ITransform& transform)
         : transform(transform) {}
     ITransform& transform;
@@ -34,8 +35,8 @@ struct TransformUpdateEvent final : public vq::core::EventBase {
 /*----------------------------------------------------------------------------*/
 
 class ITransform
-    : public vq::core::EventEmitter<TransformChangeEvent, TransformResetEvent,
-                                    TransformUpdateEvent> {
+    : public vq::core::event::EventEmitter<
+          TransformChangeEvent, TransformResetEvent, TransformUpdateEvent> {
   public:
     static constexpr glm::vec3 s_world_up     = {0.0f, 1.0f, 0.0f};
     static constexpr glm::vec3 s_world_front  = {0.0f, 0.0f, -1.0f};

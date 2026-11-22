@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vq/core/Event.hpp"
 #include "vq/core/Resource.hpp"
+#include "vq/core/event/EventHandler.hpp"
 
 namespace vq::graphics::shader {
 
@@ -9,7 +9,7 @@ namespace vq::graphics::shader {
 
 template <typename ValueType>
 class Uniform final
-    : public vq::core::EventHandler<vq::core::ResourceReloadEvent> {
+    : public vq::core::event::EventHandler<vq::core::ResourceReloadEvent> {
 
     friend class Shader;
 

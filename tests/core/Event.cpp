@@ -1,4 +1,6 @@
-#include "vq/core/Event.hpp"
+#include "vq/core/event/EventEmitter.hpp"
+#include "vq/core/event/EventHandler.hpp"
+#include "vq/core/event/IEvent.hpp"
 
 #include <gtest/gtest.h>
 
@@ -6,7 +8,7 @@ namespace vq::tests::core::Event {
 
 /*----------------------------------------------------------------------------*/
 
-class MockEventWithTestValue : public vq::core::EventBase {
+class MockEventWithTestValue : public vq::core::event::IEvent {
   public:
     explicit MockEventWithTestValue(const int test_value)
         : m_test_value(test_value) {}
@@ -17,14 +19,16 @@ class MockEventWithTestValue : public vq::core::EventBase {
     const int m_test_value;
 };
 
-class MockEventEmitter : public vq::core::EventEmitter<MockEventWithTestValue> {
+class MockEventEmitter
+    : public vq::core::event::EventEmitter<MockEventWithTestValue> {
   public:
     inline void emit_mock_event() {
         this->emit_event<MockEventWithTestValue>(1);
     }
 };
 
-class MockEventHandler : public vq::core::EventHandler<MockEventWithTestValue> {
+class MockEventHandler
+    : public vq::core::event::EventHandler<MockEventWithTestValue> {
   public:
     MockEventHandler() : m_event_handled(false) {}
 
@@ -43,7 +47,7 @@ class MockEventHandler : public vq::core::EventHandler<MockEventWithTestValue> {
 /*----------------------------------------------------------------------------*/
 
 TEST(Core_Event, event_is_handled) {
-    vq::core::EventBase event;
+    vq::core::event::IEvent event;
     ASSERT_FALSE(event.is_handled());
     event.set_handled();
     ASSERT_TRUE(event.is_handled());

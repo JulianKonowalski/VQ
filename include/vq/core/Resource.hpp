@@ -1,7 +1,8 @@
 #pragma once
 
-#include "vq/core/Event.hpp"
 #include "vq/core/TypeId.hpp"
+#include "vq/core/event/EventEmitter.hpp"
+#include "vq/core/event/IEvent.hpp"
 
 #include <memory>
 #include <stdexcept>
@@ -15,25 +16,26 @@ namespace vq::core {
 
 class Resource;
 
-struct ResourceLoadEvent : public EventBase {
+struct ResourceLoadEvent : public event::IEvent {
     ResourceLoadEvent(Resource& resource) : resource(resource) {}
     Resource& resource;
 };
 
-struct ResourceReloadEvent : public EventBase {
+struct ResourceReloadEvent : public event::IEvent {
     ResourceReloadEvent(Resource& resource) : resource(resource) {}
     Resource& resource;
 };
 
-struct ResourceUnloadEvent : public EventBase {
+struct ResourceUnloadEvent : public event::IEvent {
     ResourceUnloadEvent(Resource& resource) : resource(resource) {}
     Resource& resource;
 };
 
 /*----------------------------------------------------------------------------*/
 
-class Resource : public EventEmitter<ResourceLoadEvent, ResourceReloadEvent,
-                                     ResourceUnloadEvent> {
+class Resource
+    : public event::EventEmitter<ResourceLoadEvent, ResourceReloadEvent,
+                                 ResourceUnloadEvent> {
   public:
     explicit Resource(const std::string& id);
     virtual ~Resource() = default;

@@ -1,9 +1,9 @@
 #pragma once
 
+#include "vq/core/event/EventHandler.hpp"
 #include "vq/graphics/transform/ITransform.hpp"
 #include "vq/graphics/transform/RotateTransform.hpp"
 #include "vq/graphics/transform/TranslateTransform.hpp"
-
 
 namespace vq::graphics::transform {
 
@@ -11,7 +11,7 @@ namespace vq::graphics::transform {
 
 class ViewTransform final
     : public ITransform,
-      public vq::core::EventHandler<TransformChangeEvent> {
+      public vq::core::event::EventHandler<TransformChangeEvent> {
   public:
     explicit ViewTransform(RotateTransform& rotate_transform,
                            TranslateTransform& translate_transform);
