@@ -6,18 +6,18 @@ namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
-class ProjectionBase : public ITransform {
+class IProjection : public ITransform {
   public:
-    explicit ProjectionBase(const float far_clip_distance,
-                            const float near_clip_distance,
-                            const float viewport_aspect_ratio);
-    ~ProjectionBase() = default;
+    explicit IProjection(const float far_clip_distance,
+                         const float near_clip_distance,
+                         const float viewport_aspect_ratio);
+    ~IProjection() = default;
 
-    ProjectionBase(ProjectionBase&& other);
-    ProjectionBase(const ProjectionBase& other);
+    IProjection(IProjection&& other);
+    IProjection(const IProjection& other);
 
-    ProjectionBase& operator=(ProjectionBase&& other);
-    ProjectionBase& operator=(const ProjectionBase& other);
+    IProjection& operator=(IProjection&& other);
+    IProjection& operator=(const IProjection& other);
 
     inline float get_far_clip_distance() const;
     inline float get_near_clip_distance() const;
@@ -37,7 +37,7 @@ class ProjectionBase : public ITransform {
 
 /*----------------------------------------------------------------------------*/
 
-class PerspectiveProjection final : public ProjectionBase {
+class PerspectiveProjection final : public IProjection {
   public:
     PerspectiveProjection(const float field_of_view,
                           const float far_clip_distance,
@@ -63,7 +63,7 @@ class PerspectiveProjection final : public ProjectionBase {
 
 /*----------------------------------------------------------------------------*/
 
-class OrthographicProjection final : public ProjectionBase {
+class OrthographicProjection final : public IProjection {
   public:
     OrthographicProjection(const float scale, const float far_clip_distance,
                            const float near_clip_distance,
@@ -88,15 +88,15 @@ class OrthographicProjection final : public ProjectionBase {
 
 /*----------------------------------------------------------------------------*/
 
-inline float ProjectionBase::get_far_clip_distance() const {
+inline float IProjection::get_far_clip_distance() const {
     return m_far_clip_distance;
 }
 
-inline float ProjectionBase::get_near_clip_distance() const {
+inline float IProjection::get_near_clip_distance() const {
     return m_near_clip_distance;
 }
 
-inline float ProjectionBase::get_viewport_aspect_ratio() const {
+inline float IProjection::get_viewport_aspect_ratio() const {
     return m_viewport_aspect_ratio;
 }
 

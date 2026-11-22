@@ -6,16 +6,16 @@ namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
-ProjectionBase::ProjectionBase(const float far_clip_distance,
-                               const float near_clip_distance,
-                               const float viewport_aspect_ratio)
+IProjection::IProjection(const float far_clip_distance,
+                         const float near_clip_distance,
+                         const float viewport_aspect_ratio)
     : m_far_clip_distance(far_clip_distance),
       m_near_clip_distance(near_clip_distance),
       m_viewport_aspect_ratio(viewport_aspect_ratio) {}
 
 /*----------------------------------------------------------------------------*/
 
-ProjectionBase::ProjectionBase(ProjectionBase&& other)
+IProjection::IProjection(IProjection&& other)
     : ITransform(std::move(other)),
       m_far_clip_distance(other.m_far_clip_distance),
       m_near_clip_distance(other.m_near_clip_distance),
@@ -23,14 +23,14 @@ ProjectionBase::ProjectionBase(ProjectionBase&& other)
 
 /*----------------------------------------------------------------------------*/
 
-ProjectionBase::ProjectionBase(const ProjectionBase& other)
+IProjection::IProjection(const IProjection& other)
     : ITransform(other), m_far_clip_distance(other.m_far_clip_distance),
       m_near_clip_distance(other.m_near_clip_distance),
       m_viewport_aspect_ratio(other.m_viewport_aspect_ratio) {}
 
 /*----------------------------------------------------------------------------*/
 
-ProjectionBase& ProjectionBase::operator=(ProjectionBase&& other) {
+IProjection& IProjection::operator=(IProjection&& other) {
     m_far_clip_distance     = other.m_far_clip_distance;
     m_near_clip_distance    = other.m_near_clip_distance;
     m_viewport_aspect_ratio = other.m_viewport_aspect_ratio;
@@ -40,7 +40,7 @@ ProjectionBase& ProjectionBase::operator=(ProjectionBase&& other) {
 
 /*----------------------------------------------------------------------------*/
 
-ProjectionBase& ProjectionBase::operator=(const ProjectionBase& other) {
+IProjection& IProjection::operator=(const IProjection& other) {
     m_far_clip_distance     = other.m_far_clip_distance;
     m_near_clip_distance    = other.m_near_clip_distance;
     m_viewport_aspect_ratio = other.m_viewport_aspect_ratio;
@@ -50,22 +50,21 @@ ProjectionBase& ProjectionBase::operator=(const ProjectionBase& other) {
 
 /*----------------------------------------------------------------------------*/
 
-void ProjectionBase::set_far_clip_distance(const float far_clip_distance) {
+void IProjection::set_far_clip_distance(const float far_clip_distance) {
     m_far_clip_distance = far_clip_distance;
     this->set_dirty();
 }
 
 /*----------------------------------------------------------------------------*/
 
-void ProjectionBase::set_near_clip_distance(const float near_clip_distance) {
+void IProjection::set_near_clip_distance(const float near_clip_distance) {
     m_near_clip_distance = near_clip_distance;
     this->set_dirty();
 }
 
 /*----------------------------------------------------------------------------*/
 
-void ProjectionBase::set_viewport_aspect_ratio(
-    const float viewport_aspect_ratio) {
+void IProjection::set_viewport_aspect_ratio(const float viewport_aspect_ratio) {
     m_viewport_aspect_ratio = viewport_aspect_ratio;
     this->set_dirty();
 }
@@ -73,7 +72,7 @@ void ProjectionBase::set_viewport_aspect_ratio(
 /*----------------------------------------------------------------------------*/
 
 /** reset shouldn't do anything on projection classes */
-void ProjectionBase::on_reset() {}
+void IProjection::on_reset() {}
 
 /*----------------------------------------------------------------------------*/
 
@@ -81,27 +80,25 @@ PerspectiveProjection::PerspectiveProjection(const float field_of_view,
                                              const float far_clip_distance,
                                              const float near_clip_distance,
                                              const float viewport_aspect_ratio)
-    : ProjectionBase(far_clip_distance, near_clip_distance,
-                     viewport_aspect_ratio),
+    : IProjection(far_clip_distance, near_clip_distance, viewport_aspect_ratio),
       m_field_of_view(field_of_view) {}
 
 /*----------------------------------------------------------------------------*/
 
 PerspectiveProjection::PerspectiveProjection(PerspectiveProjection&& other)
-    : ProjectionBase(std::move(other)), m_field_of_view(other.m_field_of_view) {
-}
+    : IProjection(std::move(other)), m_field_of_view(other.m_field_of_view) {}
 
 /*----------------------------------------------------------------------------*/
 
 PerspectiveProjection::PerspectiveProjection(const PerspectiveProjection& other)
-    : ProjectionBase(other), m_field_of_view(other.m_field_of_view) {}
+    : IProjection(other), m_field_of_view(other.m_field_of_view) {}
 
 /*----------------------------------------------------------------------------*/
 
 PerspectiveProjection&
 PerspectiveProjection::operator=(PerspectiveProjection&& other) {
     m_field_of_view = other.m_field_of_view;
-    ProjectionBase::operator=(std::move(other));
+    IProjection::operator=(std::move(other));
     return *this;
 }
 
@@ -110,7 +107,7 @@ PerspectiveProjection::operator=(PerspectiveProjection&& other) {
 PerspectiveProjection&
 PerspectiveProjection::operator=(const PerspectiveProjection& other) {
     m_field_of_view = other.m_field_of_view;
-    ProjectionBase::operator=(other);
+    IProjection::operator=(other);
     return *this;
 }
 
@@ -134,27 +131,26 @@ void PerspectiveProjection::on_update() {
 OrthographicProjection::OrthographicProjection(
     const float scale, const float far_clip_distance,
     const float near_clip_distance, const float viewport_aspect_ratio)
-    : ProjectionBase(far_clip_distance, near_clip_distance,
-                     viewport_aspect_ratio),
+    : IProjection(far_clip_distance, near_clip_distance, viewport_aspect_ratio),
       m_scale(scale) {}
 
 /*----------------------------------------------------------------------------*/
 
 OrthographicProjection::OrthographicProjection(OrthographicProjection&& other)
-    : ProjectionBase(std::move(other)), m_scale(other.m_scale) {}
+    : IProjection(std::move(other)), m_scale(other.m_scale) {}
 
 /*----------------------------------------------------------------------------*/
 
 OrthographicProjection::OrthographicProjection(
     const OrthographicProjection& other)
-    : ProjectionBase(other), m_scale(other.m_scale) {}
+    : IProjection(other), m_scale(other.m_scale) {}
 
 /*----------------------------------------------------------------------------*/
 
 OrthographicProjection&
 OrthographicProjection::operator=(OrthographicProjection&& other) {
     m_scale = other.m_scale;
-    ProjectionBase::operator=(std::move(other));
+    IProjection::operator=(std::move(other));
     return *this;
 }
 
@@ -163,7 +159,7 @@ OrthographicProjection::operator=(OrthographicProjection&& other) {
 OrthographicProjection&
 OrthographicProjection::operator=(const OrthographicProjection& other) {
     m_scale = other.m_scale;
-    ProjectionBase::operator=(other);
+    IProjection::operator=(other);
     return *this;
 }
 
