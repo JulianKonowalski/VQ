@@ -22,7 +22,8 @@ void main() {
     i_position = pos;
     i_normal = normal;
     i_tex_coord = tex_coord;
-    gl_Position = u_model_matrix * vec4(pos, 1.0);
+    gl_Position = vec4(pos, 1.0);
+    // gl_Position = u_model_matrix * vec4(pos, 1.0);
 }
 
 /*----------------------------------------------------------------------------*/

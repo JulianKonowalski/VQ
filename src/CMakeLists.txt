@@ -19,3 +19,4 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE glfw 
     PRIVATE glad
 )
+target_compile_definitions(${PROJECT_NAME} PUBLIC VQ_RESOURCE_PATH="${CMAKE_CURRENT_LIST_DIR}/resources/")

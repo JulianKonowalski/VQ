@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <vq/core/Event.hpp>
 #include <vq/core/Resource.hpp>
-#include <vq/graphics/core/Geometry.hpp>
+#include <vq/graphics/geometry/Geometry.hpp>
 #include <vq/graphics/shader/Shader.hpp>
 #include <vq/graphics/texture/Texture2D.hpp>
 #include <vq/graphics/texture/TextureCubeMap.hpp>
@@ -14,7 +14,7 @@
 
 /*----------------------------------------------------------------------------*/
 
-static const std::string s_base_resource_path = RESOURCE_PATH;
+static const std::string s_base_resource_path = VQ_RESOURCE_PATH;
 
 static vq::graphics::transform::RotateTransform view_rotation;
 static vq::graphics::transform::TranslateTransform view_translation;
@@ -85,9 +85,9 @@ int main(void) {
 
     auto& resource_manager = vq::core::ResourceManager::get_instance();
 
-    resource_manager.load_resource<vq::graphics::core::Geometry>(
+    resource_manager.load_resource<vq::graphics::geometry::Geometry>(
         "test_geometry");
-    resource_manager.load_resource<vq::graphics::core::Geometry>(
+    resource_manager.load_resource<vq::graphics::geometry::Geometry>(
         "skybox_geometry");
     resource_manager.load_resource<vq::graphics::shader::Shader>(
         "test_shader",
@@ -115,10 +115,10 @@ int main(void) {
         s_base_resource_path + "textures/skybox/back.jpg");
 
     auto test_geometry_handle =
-        resource_manager.get_resource<vq::graphics::core::Geometry>(
+        resource_manager.get_resource<vq::graphics::geometry::Geometry>(
             "test_geometry");
     auto skybox_geometry_handle =
-        resource_manager.get_resource<vq::graphics::core::Geometry>(
+        resource_manager.get_resource<vq::graphics::geometry::Geometry>(
             "skybox_geometry");
     auto test_shader_handle =
         resource_manager.get_resource<vq::graphics::shader::Shader>(
@@ -134,25 +134,25 @@ int main(void) {
             "skybox_texture");
 
     test_geometry_handle.get()
-        .set_attribute<vq::graphics::core::Geometry::Attribute::POSITION>(
+        .set_attribute<vq::graphics::geometry::Geometry::Attribute::POSITION>(
             {-0.5, -0.5, 0.0, //
              0.5, -0.5, 0.0,  //
              0.0, 0.5, 0.0});
     test_geometry_handle.get()
-        .set_attribute<vq::graphics::core::Geometry::Attribute::NORMAL>(
+        .set_attribute<vq::graphics::geometry::Geometry::Attribute::NORMAL>(
             {0.0, 0.0, 1.0, //
              0.0, 0.0, 1.0, //
              0.0, 0.0, 1.0});
     test_geometry_handle.get()
         .set_attribute<
-            vq::graphics::core::Geometry::Attribute::TEXTURE_COORDINATE>(
+            vq::graphics::geometry::Geometry::Attribute::TEXTURE_COORDINATE>(
             {0.0, 0.0, //
              1.0, 0.0, //
              0.5, 1.0});
     test_geometry_handle.get().set_indices({0, 1, 2});
 
     skybox_geometry_handle.get()
-        .set_attribute<vq::graphics::core::Geometry::Attribute::POSITION>(
+        .set_attribute<vq::graphics::geometry::Geometry::Attribute::POSITION>(
             {-1.0f, 1.0f,  -1.0f, //
              -1.0f, -1.0f, -1.0f, //
              1.0f,  -1.0f, -1.0f, //
@@ -246,7 +246,7 @@ int main(void) {
 
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
-        vq::graphics::core::Geometry::unbind_all();
+        vq::graphics::geometry::Geometry::unbind_all();
         vq::graphics::texture::Texture2D::unbind_all();
         vq::graphics::shader::Shader::unbind_all();
     }

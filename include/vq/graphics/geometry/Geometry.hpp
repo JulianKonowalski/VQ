@@ -6,11 +6,11 @@
 #include <cstdint>
 #include <vector>
 
-namespace vq::graphics::core {
+namespace vq::graphics::geometry {
 
 /*----------------------------------------------------------------------------*/
 
-class Geometry : public vq::core::Resource {
+class Geometry : public core::Resource {
   public:
     enum class Attribute : uint8_t {
         POSITION = 0,
@@ -91,4 +91,4 @@ inline size_t Geometry::get_indices_size() const { return m_indices_size; }
 
 /*----------------------------------------------------------------------------*/
 
-} // namespace vq::graphics::core
+} // namespace vq::graphics::geometry

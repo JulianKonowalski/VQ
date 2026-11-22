@@ -1,20 +1,20 @@
-#include "vq/graphics/core/Geometry.hpp"
+#include "vq/graphics/geometry/Geometry.hpp"
 
 #include <glad/glad.h>
 #include <iostream>
 
-namespace vq::graphics::core {
+namespace vq::graphics::geometry {
 
 /*----------------------------------------------------------------------------*/
 
 Geometry::Geometry(const std::string& id, const std::string& source_file_path)
-    : vq::core::Resource(id), m_source_file(source_file_path),
+    : core::Resource(id), m_source_file(source_file_path),
       m_attribute_sizes({0}), m_indices_size(0), m_attributes({0}),
       m_vertex_array(0), m_index_array(0) {}
 
 /*----------------------------------------------------------------------------*/
 
-Geometry::Geometry(Geometry&& other) : vq::core::Resource("") {
+Geometry::Geometry(Geometry&& other) : core::Resource("") {
     *this = std::move(other);
 }
 
@@ -30,7 +30,7 @@ Geometry& Geometry::operator=(Geometry&& other) {
     m_index_array        = other.m_index_array;
     other.m_vertex_array = 0;
     other.m_index_array  = 0;
-    vq::core::Resource::operator=(std::move(other));
+    core::Resource::operator=(std::move(other));
     return *this;
 }
 
@@ -198,4 +198,4 @@ void Geometry::upload_attribute_data(const std::vector<float>& data,
 
 /*----------------------------------------------------------------------------*/
 
-} // namespace vq::graphics::core
+} // namespace vq::graphics::geometry
