@@ -17,24 +17,23 @@ static constexpr float pi2 = 2.0f * 3.14159265358979323846;
 /*----------------------------------------------------------------------------*/
 
 RotateTransform::RotateTransform()
-    : TransformBase(), m_rotation(1.0f, 0.0f, 0.0f, 0.0f) {}
+    : ITransform(), m_rotation(1.0f, 0.0f, 0.0f, 0.0f) {}
 
 /*----------------------------------------------------------------------------*/
 
 RotateTransform::RotateTransform(RotateTransform&& other)
-    : TransformBase(std::move(other)), m_rotation(std::move(other.m_rotation)) {
-}
+    : ITransform(std::move(other)), m_rotation(std::move(other.m_rotation)) {}
 
 /*----------------------------------------------------------------------------*/
 
 RotateTransform::RotateTransform(const RotateTransform& other)
-    : TransformBase(other), m_rotation(other.m_rotation) {}
+    : ITransform(other), m_rotation(other.m_rotation) {}
 
 /*----------------------------------------------------------------------------*/
 
 RotateTransform& RotateTransform::operator=(RotateTransform&& other) {
     m_rotation = std::move(other.m_rotation);
-    TransformBase::operator=(std::move(other));
+    ITransform::operator=(std::move(other));
     return *this;
 }
 
@@ -42,7 +41,7 @@ RotateTransform& RotateTransform::operator=(RotateTransform&& other) {
 
 RotateTransform& RotateTransform::operator=(const RotateTransform& other) {
     m_rotation = other.m_rotation;
-    TransformBase::operator=(other);
+    ITransform::operator=(other);
     return *this;
 }
 

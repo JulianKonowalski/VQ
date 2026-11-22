@@ -66,7 +66,7 @@ class WindowMouseHandler
                                              view_transform.get_right_vector());
         view_rotation.rotate_on_axis_degrees(
             0.05f * event.x_position_delta,
-            vq::graphics::transform::TransformBase::s_world_up);
+            vq::graphics::transform::ITransform::s_world_up);
         event.set_handled();
     }
 };
@@ -211,7 +211,7 @@ int main(void) {
             static_cast<float>(window.get_specification().height));
 
     translate_transform.translate_on_axis(
-        10.0f, vq::graphics::transform::TransformBase::s_world_front);
+        10.0f, vq::graphics::transform::ITransform::s_world_front);
 
     while (!window.should_close()) {
         window.update();

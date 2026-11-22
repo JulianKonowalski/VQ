@@ -1,12 +1,12 @@
 #pragma once
 
-#include "vq/graphics/transform/TransformBase.hpp"
+#include "vq/graphics/transform/ITransform.hpp"
 
 namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
-class ProjectionBase : public TransformBase {
+class ProjectionBase : public ITransform {
   public:
     explicit ProjectionBase(const float far_clip_distance,
                             const float near_clip_distance,

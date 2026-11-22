@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vq/graphics/transform/TransformBase.hpp"
+#include "vq/graphics/transform/ITransform.hpp"
 
 #include <glm/vec3.hpp>
 
@@ -8,7 +8,7 @@ namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
-class ScaleTransform final : public TransformBase {
+class ScaleTransform final : public ITransform {
   public:
     ScaleTransform();
     ~ScaleTransform() = default;

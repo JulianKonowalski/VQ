@@ -1,9 +1,9 @@
-#include "vq/graphics/transform/TransformBase.hpp"
+#include "vq/graphics/transform/ITransform.hpp"
 
 #include <array>
 #include <gtest/gtest.h>
 
-namespace vq::test::graphics::transform::TransformBase {
+namespace vq::test::graphics::transform::ITransform {
 
 /*----------------------------------------------------------------------------*/
 
@@ -13,28 +13,28 @@ const std::array<std::array<float, 4>, 4>
                        std::array<float, 4>({0.0f, 0.0f, 1.0f, 0.0f}), //
                        std::array<float, 4>({0.0f, 0.0f, 0.0f, 1.0f})});
 
-class Transform final : public vq::graphics::transform::TransformBase {
+class Transform final : public vq::graphics::transform::ITransform {
   public:
     Transform()
-        : TransformBase(), m_transform_factor(1.0f), m_on_reset_called(false),
+        : ITransform(), m_transform_factor(1.0f), m_on_reset_called(false),
           m_on_update_called(false) {}
 
     Transform(Transform&& other)
-        : vq::graphics::transform::TransformBase(std::move(other)) {
+        : vq::graphics::transform::ITransform(std::move(other)) {
         m_transform_factor = other.m_transform_factor;
         m_on_reset_called  = other.m_on_reset_called;
         m_on_update_called = other.m_on_update_called;
     }
 
     Transform(const Transform& other)
-        : vq::graphics::transform::TransformBase(other) {
+        : vq::graphics::transform::ITransform(other) {
         m_transform_factor = other.m_transform_factor;
         m_on_reset_called  = other.m_on_reset_called;
         m_on_update_called = other.m_on_update_called;
     }
 
     Transform& operator=(Transform&& other) {
-        vq::graphics::transform::TransformBase::operator=(std::move(other));
+        vq::graphics::transform::ITransform::operator=(std::move(other));
         m_transform_factor = other.m_transform_factor;
         m_on_reset_called  = other.m_on_reset_called;
         m_on_update_called = other.m_on_update_called;
@@ -42,7 +42,7 @@ class Transform final : public vq::graphics::transform::TransformBase {
     }
 
     Transform& operator=(const Transform& other) {
-        vq::graphics::transform::TransformBase::operator=(other);
+        vq::graphics::transform::ITransform::operator=(other);
         m_transform_factor = other.m_transform_factor;
         m_on_reset_called  = other.m_on_reset_called;
         m_on_update_called = other.m_on_update_called;
@@ -80,7 +80,7 @@ class Transform final : public vq::graphics::transform::TransformBase {
 
 /*----------------------------------------------------------------------------*/
 
-TEST(GRAPHICS_TRANSFORM_TransformBase, is_identity_by_default) {
+TEST(GRAPHICS_TRANSFORM_ITransform, is_identity_by_default) {
     Transform transform;
     const auto& transform_matrix = transform.get_transform_matrix();
     for (int i = 0; i < 4; ++i) {
@@ -93,7 +93,7 @@ TEST(GRAPHICS_TRANSFORM_TransformBase, is_identity_by_default) {
 
 /*----------------------------------------------------------------------------*/
 
-TEST(GRAPHICS_TRANSFORM_TransformBase, move_constructor) {
+TEST(GRAPHICS_TRANSFORM_ITransform, move_constructor) {
     Transform transform_1;
     transform_1.reset_transform();
     transform_1.set_transform_factor(2.0f);
@@ -117,7 +117,7 @@ TEST(GRAPHICS_TRANSFORM_TransformBase, move_constructor) {
 
 /*----------------------------------------------------------------------------*/
 
-TEST(GRAPHICS_TRANSFORM_TransformBase, copy_constructor) {
+TEST(GRAPHICS_TRANSFORM_ITransform, copy_constructor) {
     Transform transform_1;
     transform_1.reset_transform();
     transform_1.set_transform_factor(2.0f);
@@ -141,7 +141,7 @@ TEST(GRAPHICS_TRANSFORM_TransformBase, copy_constructor) {
 
 /*----------------------------------------------------------------------------*/
 
-TEST(GRAPHICS_TRANSFORM_TransformBase, move_operator) {
+TEST(GRAPHICS_TRANSFORM_ITransform, move_operator) {
     Transform transform_1;
     transform_1.reset_transform();
     transform_1.set_transform_factor(2.0f);
@@ -165,7 +165,7 @@ TEST(GRAPHICS_TRANSFORM_TransformBase, move_operator) {
 
 /*----------------------------------------------------------------------------*/
 
-TEST(GRAPHICS_TRANSFORM_TransformBase, copy_operator) {
+TEST(GRAPHICS_TRANSFORM_ITransform, copy_operator) {
     Transform transform_1;
     transform_1.reset_transform();
     transform_1.set_transform_factor(2.0f);
@@ -189,7 +189,7 @@ TEST(GRAPHICS_TRANSFORM_TransformBase, copy_operator) {
 
 /*----------------------------------------------------------------------------*/
 
-TEST(GRAPHICS_TRANSFORM_TransformBase, dirty_flag_updates) {
+TEST(GRAPHICS_TRANSFORM_ITransform, dirty_flag_updates) {
     {
         Transform transform;
         ASSERT_TRUE(transform.is_dirty());
@@ -208,7 +208,7 @@ TEST(GRAPHICS_TRANSFORM_TransformBase, dirty_flag_updates) {
 
 /*----------------------------------------------------------------------------*/
 
-TEST(GRAPHICS_TRANSFORM_TransformBase, resets_to_identity_transform) {
+TEST(GRAPHICS_TRANSFORM_ITransform, resets_to_identity_transform) {
     Transform transform;
     transform.set_transform_factor(2.0f);
     const auto& transform_matrix = transform.get_transform_matrix();
@@ -238,7 +238,7 @@ TEST(GRAPHICS_TRANSFORM_TransformBase, resets_to_identity_transform) {
 
 /*----------------------------------------------------------------------------*/
 
-TEST(GRAPHICS_TRANSFORM_TransformBase, calls_on_reset) {
+TEST(GRAPHICS_TRANSFORM_ITransform, calls_on_reset) {
     Transform transform;
     ASSERT_FALSE(transform.on_reset_called());
     transform.reset_transform();
@@ -247,7 +247,7 @@ TEST(GRAPHICS_TRANSFORM_TransformBase, calls_on_reset) {
 
 /*----------------------------------------------------------------------------*/
 
-TEST(GRAPHICS_TRANSFORM_TransformBase, calls_on_update) {
+TEST(GRAPHICS_TRANSFORM_ITransform, calls_on_update) {
     Transform transform;
     ASSERT_FALSE(transform.on_update_called());
     transform.update_transform_matrix();
@@ -256,4 +256,4 @@ TEST(GRAPHICS_TRANSFORM_TransformBase, calls_on_update) {
 
 /*----------------------------------------------------------------------------*/
 
-} // namespace vq::test::graphics::transform::TransformBase
+} // namespace vq::test::graphics::transform::ITransform

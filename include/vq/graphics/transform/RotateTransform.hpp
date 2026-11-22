@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vq/graphics/transform/TransformBase.hpp"
+#include "vq/graphics/transform/ITransform.hpp"
 
 #include <glm/gtc/quaternion.hpp>
 #include <glm/vec3.hpp>
@@ -9,7 +9,7 @@ namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
-class RotateTransform final : public TransformBase {
+class RotateTransform final : public ITransform {
   public:
     RotateTransform();
     ~RotateTransform() = default;

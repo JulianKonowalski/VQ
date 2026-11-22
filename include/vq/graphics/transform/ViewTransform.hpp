@@ -1,15 +1,16 @@
 #pragma once
 
+#include "vq/graphics/transform/ITransform.hpp"
 #include "vq/graphics/transform/RotateTransform.hpp"
-#include "vq/graphics/transform/TransformBase.hpp"
 #include "vq/graphics/transform/TranslateTransform.hpp"
+
 
 namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
 class ViewTransform final
-    : public TransformBase,
+    : public ITransform,
       public vq::core::EventHandler<TransformChangeEvent> {
   public:
     explicit ViewTransform(RotateTransform& rotate_transform,
@@ -49,17 +50,17 @@ class ViewTransform final
 /*----------------------------------------------------------------------------*/
 
 inline glm::vec3 ViewTransform::get_up_vector() const {
-    return glm::normalize(TransformBase::s_world_up *
+    return glm::normalize(ITransform::s_world_up *
                           m_rotate_transform->get_rotation_quaternion());
 }
 
 inline glm::vec3 ViewTransform::get_front_vector() const {
-    return glm::normalize(TransformBase::s_world_front *
+    return glm::normalize(ITransform::s_world_front *
                           m_rotate_transform->get_rotation_quaternion());
 }
 
 inline glm::vec3 ViewTransform::get_right_vector() const {
-    return glm::normalize(TransformBase::s_world_right *
+    return glm::normalize(ITransform::s_world_right *
                           m_rotate_transform->get_rotation_quaternion());
 }
 

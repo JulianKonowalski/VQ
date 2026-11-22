@@ -15,14 +15,14 @@ ViewTransform::ViewTransform(RotateTransform& rotate_transform,
 /*----------------------------------------------------------------------------*/
 
 ViewTransform::ViewTransform(ViewTransform&& other)
-    : EventHandler(std::move(other)), TransformBase(std::move(other)),
+    : EventHandler(std::move(other)), ITransform(std::move(other)),
       m_rotate_transform(other.m_rotate_transform),
       m_translate_transform(other.m_translate_transform) {}
 
 /*----------------------------------------------------------------------------*/
 
 ViewTransform::ViewTransform(const ViewTransform& other)
-    : EventHandler(other), TransformBase(other),
+    : EventHandler(other), ITransform(other),
       m_rotate_transform(other.m_rotate_transform),
       m_translate_transform(other.m_translate_transform) {}
 
@@ -31,7 +31,7 @@ ViewTransform::ViewTransform(const ViewTransform& other)
 ViewTransform& ViewTransform::operator=(ViewTransform&& other) {
     m_rotate_transform    = other.m_rotate_transform;
     m_translate_transform = other.m_translate_transform;
-    TransformBase::operator=(std::move(other));
+    ITransform::operator=(std::move(other));
     EventHandler::operator=(std::move(other));
     return *this;
 }
@@ -41,7 +41,7 @@ ViewTransform& ViewTransform::operator=(ViewTransform&& other) {
 ViewTransform& ViewTransform::operator=(const ViewTransform& other) {
     m_rotate_transform    = other.m_rotate_transform;
     m_translate_transform = other.m_translate_transform;
-    TransformBase::operator=(other);
+    ITransform::operator=(other);
     EventHandler::operator=(other);
     return *this;
 }

@@ -1,27 +1,27 @@
-#include "vq/graphics/transform/TransformBase.hpp"
+#include "vq/graphics/transform/ITransform.hpp"
 
 namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
-TransformBase::TransformBase() : m_transform_matrix(1.0f), m_is_dirty(true) {}
+ITransform::ITransform() : m_transform_matrix(1.0f), m_is_dirty(true) {}
 
 /*----------------------------------------------------------------------------*/
 
-TransformBase::TransformBase(TransformBase&& other)
+ITransform::ITransform(ITransform&& other)
     : EventEmitter(std::move(other)),
       m_transform_matrix(std::move(other.m_transform_matrix)),
       m_is_dirty(other.m_is_dirty) {}
 
 /*----------------------------------------------------------------------------*/
 
-TransformBase::TransformBase(const TransformBase& other)
+ITransform::ITransform(const ITransform& other)
     : EventEmitter(other), m_transform_matrix(other.m_transform_matrix),
       m_is_dirty(other.m_is_dirty) {}
 
 /*----------------------------------------------------------------------------*/
 
-TransformBase& TransformBase::operator=(TransformBase&& other) {
+ITransform& ITransform::operator=(ITransform&& other) {
     m_transform_matrix = std::move(other.m_transform_matrix);
     m_is_dirty         = other.m_is_dirty;
     EventEmitter::operator=(std::move(other));
@@ -31,7 +31,7 @@ TransformBase& TransformBase::operator=(TransformBase&& other) {
 
 /*----------------------------------------------------------------------------*/
 
-TransformBase& TransformBase::operator=(const TransformBase& other) {
+ITransform& ITransform::operator=(const ITransform& other) {
     m_transform_matrix = other.m_transform_matrix;
     m_is_dirty         = other.m_is_dirty;
     EventEmitter::operator=(other);
@@ -41,7 +41,7 @@ TransformBase& TransformBase::operator=(const TransformBase& other) {
 
 /*----------------------------------------------------------------------------*/
 
-void TransformBase::reset_transform() {
+void ITransform::reset_transform() {
     this->on_reset();
     m_transform_matrix = glm::mat4(1.0f);
     this->emit_event<TransformResetEvent>(*this);
@@ -50,7 +50,7 @@ void TransformBase::reset_transform() {
 
 /*----------------------------------------------------------------------------*/
 
-void TransformBase::update_transform_matrix() {
+void ITransform::update_transform_matrix() {
     if (m_is_dirty) {
         this->on_update();
         m_is_dirty = false;
@@ -60,14 +60,14 @@ void TransformBase::update_transform_matrix() {
 
 /*----------------------------------------------------------------------------*/
 
-const glm::mat4& TransformBase::get_transform_matrix() {
+const glm::mat4& ITransform::get_transform_matrix() {
     this->update_transform_matrix();
     return m_transform_matrix;
 }
 
 /*----------------------------------------------------------------------------*/
 
-void TransformBase::set_dirty() {
+void ITransform::set_dirty() {
     m_is_dirty = true;
     this->emit_event<TransformChangeEvent>(*this);
 }

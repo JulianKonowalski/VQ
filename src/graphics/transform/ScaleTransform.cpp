@@ -6,23 +6,23 @@ namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
-ScaleTransform::ScaleTransform() : TransformBase(), m_scale(1.0f, 1.0f, 1.0f) {}
+ScaleTransform::ScaleTransform() : ITransform(), m_scale(1.0f, 1.0f, 1.0f) {}
 
 /*----------------------------------------------------------------------------*/
 
 ScaleTransform::ScaleTransform(ScaleTransform&& other)
-    : TransformBase(std::move(other)), m_scale(std::move(other.m_scale)) {}
+    : ITransform(std::move(other)), m_scale(std::move(other.m_scale)) {}
 
 /*----------------------------------------------------------------------------*/
 
 ScaleTransform::ScaleTransform(const ScaleTransform& other)
-    : TransformBase(other), m_scale(other.m_scale) {}
+    : ITransform(other), m_scale(other.m_scale) {}
 
 /*----------------------------------------------------------------------------*/
 
 ScaleTransform& ScaleTransform::operator=(ScaleTransform&& other) {
     m_scale = std::move(other.m_scale);
-    TransformBase::operator=(std::move(other));
+    ITransform::operator=(std::move(other));
     return *this;
 }
 
@@ -30,7 +30,7 @@ ScaleTransform& ScaleTransform::operator=(ScaleTransform&& other) {
 
 ScaleTransform& ScaleTransform::operator=(const ScaleTransform& other) {
     m_scale = other.m_scale;
-    TransformBase::operator=(other);
+    ITransform::operator=(other);
     return *this;
 }
 

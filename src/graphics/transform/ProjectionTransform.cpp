@@ -16,7 +16,7 @@ ProjectionBase::ProjectionBase(const float far_clip_distance,
 /*----------------------------------------------------------------------------*/
 
 ProjectionBase::ProjectionBase(ProjectionBase&& other)
-    : TransformBase(std::move(other)),
+    : ITransform(std::move(other)),
       m_far_clip_distance(other.m_far_clip_distance),
       m_near_clip_distance(other.m_near_clip_distance),
       m_viewport_aspect_ratio(other.m_viewport_aspect_ratio) {}
@@ -24,7 +24,7 @@ ProjectionBase::ProjectionBase(ProjectionBase&& other)
 /*----------------------------------------------------------------------------*/
 
 ProjectionBase::ProjectionBase(const ProjectionBase& other)
-    : TransformBase(other), m_far_clip_distance(other.m_far_clip_distance),
+    : ITransform(other), m_far_clip_distance(other.m_far_clip_distance),
       m_near_clip_distance(other.m_near_clip_distance),
       m_viewport_aspect_ratio(other.m_viewport_aspect_ratio) {}
 
@@ -34,7 +34,7 @@ ProjectionBase& ProjectionBase::operator=(ProjectionBase&& other) {
     m_far_clip_distance     = other.m_far_clip_distance;
     m_near_clip_distance    = other.m_near_clip_distance;
     m_viewport_aspect_ratio = other.m_viewport_aspect_ratio;
-    TransformBase::operator=(std::move(other));
+    ITransform::operator=(std::move(other));
     return *this;
 }
 
@@ -44,7 +44,7 @@ ProjectionBase& ProjectionBase::operator=(const ProjectionBase& other) {
     m_far_clip_distance     = other.m_far_clip_distance;
     m_near_clip_distance    = other.m_near_clip_distance;
     m_viewport_aspect_ratio = other.m_viewport_aspect_ratio;
-    TransformBase::operator=(other);
+    ITransform::operator=(other);
     return *this;
 }
 

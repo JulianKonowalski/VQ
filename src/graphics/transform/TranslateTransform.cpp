@@ -7,24 +7,24 @@ namespace vq::graphics::transform {
 /*----------------------------------------------------------------------------*/
 
 TranslateTransform::TranslateTransform()
-    : TransformBase(), m_translation(0.0f, 0.0f, 0.0f) {}
+    : ITransform(), m_translation(0.0f, 0.0f, 0.0f) {}
 
 /*----------------------------------------------------------------------------*/
 
 TranslateTransform::TranslateTransform(TranslateTransform&& other)
-    : TransformBase(std::move(other)),
+    : ITransform(std::move(other)),
       m_translation(std::move(other.m_translation)) {}
 
 /*----------------------------------------------------------------------------*/
 
 TranslateTransform::TranslateTransform(const TranslateTransform& other)
-    : TransformBase(other), m_translation(other.m_translation) {}
+    : ITransform(other), m_translation(other.m_translation) {}
 
 /*----------------------------------------------------------------------------*/
 
 TranslateTransform& TranslateTransform::operator=(TranslateTransform&& other) {
     m_translation = std::move(other.m_translation);
-    TransformBase::operator=(std::move(other));
+    ITransform::operator=(std::move(other));
     return *this;
 }
 
@@ -33,7 +33,7 @@ TranslateTransform& TranslateTransform::operator=(TranslateTransform&& other) {
 TranslateTransform&
 TranslateTransform::operator=(const TranslateTransform& other) {
     m_translation = other.m_translation;
-    TransformBase::operator=(other);
+    ITransform::operator=(other);
     return *this;
 }
 

@@ -9,31 +9,31 @@ namespace vq::graphics::transform {
 
 /*----------------------------------------------------------------------------*/
 
-class TransformBase;
+class ITransform;
 
 /*----------------------------------------------------------------------------*/
 
 struct TransformChangeEvent final : public vq::core::EventBase {
-    explicit TransformChangeEvent(TransformBase& transform)
+    explicit TransformChangeEvent(ITransform& transform)
         : transform(transform) {}
-    TransformBase& transform;
+    ITransform& transform;
 };
 
 struct TransformResetEvent final : public vq::core::EventBase {
-    explicit TransformResetEvent(TransformBase& transform)
+    explicit TransformResetEvent(ITransform& transform)
         : transform(transform) {}
-    TransformBase& transform;
+    ITransform& transform;
 };
 
 struct TransformUpdateEvent final : public vq::core::EventBase {
-    explicit TransformUpdateEvent(TransformBase& transform)
+    explicit TransformUpdateEvent(ITransform& transform)
         : transform(transform) {}
-    TransformBase& transform;
+    ITransform& transform;
 };
 
 /*----------------------------------------------------------------------------*/
 
-class TransformBase
+class ITransform
     : public vq::core::EventEmitter<TransformChangeEvent, TransformResetEvent,
                                     TransformUpdateEvent> {
   public:
@@ -42,14 +42,14 @@ class TransformBase
     static constexpr glm::vec3 s_world_right  = {1.0f, 0.0f, 0.0f};
     static constexpr glm::vec3 s_world_center = {0.0f, 0.0f, 0.0f};
 
-    TransformBase();
-    ~TransformBase() = default;
+    ITransform();
+    ~ITransform() = default;
 
-    TransformBase(TransformBase&& other);
-    TransformBase(const TransformBase& other);
+    ITransform(ITransform&& other);
+    ITransform(const ITransform& other);
 
-    TransformBase& operator=(TransformBase&& other);
-    TransformBase& operator=(const TransformBase& other);
+    ITransform& operator=(ITransform&& other);
+    ITransform& operator=(const ITransform& other);
 
     inline bool is_dirty() const;
 
@@ -72,7 +72,7 @@ class TransformBase
 
 /*----------------------------------------------------------------------------*/
 
-inline bool TransformBase::is_dirty() const { return m_is_dirty; }
+inline bool ITransform::is_dirty() const { return m_is_dirty; }
 
 /*----------------------------------------------------------------------------*/
 
