@@ -1,4 +1,4 @@
-#include "vq/graphics/texture/TextureBase.hpp"
+#include "vq/graphics/texture/ITexture.hpp"
 
 #include <glad/glad.h>
 
@@ -32,14 +32,14 @@ struct TextureTypeLUT<TextureType::TEXTURE_CUBE_MAP> {
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-TextureBase<TType>::TextureBase(const std::string& id,
-                                const std::vector<std::string>& source_files)
+ITexture<TType>::ITexture(const std::string& id,
+                          const std::vector<std::string>& source_files)
     : Resource(id), m_source_files(source_files), m_texture_id(0) {}
 
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-TextureBase<TType>::TextureBase(TextureBase<TType>&& other)
+ITexture<TType>::ITexture(ITexture<TType>&& other)
     : Resource(std::move(other)),
       m_source_files(std::move(other.m_source_files)),
       m_texture_id(other.m_texture_id) {
@@ -50,7 +50,7 @@ TextureBase<TType>::TextureBase(TextureBase<TType>&& other)
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-TextureBase<TType>& TextureBase<TType>::operator=(TextureBase<TType>&& other) {
+ITexture<TType>& ITexture<TType>::operator=(ITexture<TType>&& other) {
     m_source_files     = std::move(other.m_source_files);
     m_texture_id       = other.m_texture_id;
     other.m_texture_id = 0;
@@ -62,7 +62,7 @@ TextureBase<TType>& TextureBase<TType>::operator=(TextureBase<TType>&& other) {
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-void TextureBase<TType>::unbind_all() {
+void ITexture<TType>::unbind_all() {
     glBindTexture(TextureTypeLUT<TType>::s_value, GL_NONE);
     s_current_texture = nullptr;
 }
@@ -70,7 +70,7 @@ void TextureBase<TType>::unbind_all() {
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-void TextureBase<TType>::set_wrap_s(const TextureWrapType wrap_type) {
+void ITexture<TType>::set_wrap_s(const TextureWrapType wrap_type) {
     auto* const current_texture = s_current_texture;
     if (current_texture != this) {
         this->bind();
@@ -107,7 +107,7 @@ void TextureBase<TType>::set_wrap_s(const TextureWrapType wrap_type) {
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-void TextureBase<TType>::set_wrap_t(const TextureWrapType wrap_type) {
+void ITexture<TType>::set_wrap_t(const TextureWrapType wrap_type) {
     auto* const current_texture = s_current_texture;
     if (current_texture != this) {
         this->bind();
@@ -144,7 +144,7 @@ void TextureBase<TType>::set_wrap_t(const TextureWrapType wrap_type) {
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-void TextureBase<TType>::set_wrap_r(const TextureWrapType wrap_type) {
+void ITexture<TType>::set_wrap_r(const TextureWrapType wrap_type) {
     auto* const current_texture = s_current_texture;
     if (current_texture != this) {
         this->bind();
@@ -181,7 +181,7 @@ void TextureBase<TType>::set_wrap_r(const TextureWrapType wrap_type) {
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-void TextureBase<TType>::set_filter_min(const TextureFilterType filter_type) {
+void ITexture<TType>::set_filter_min(const TextureFilterType filter_type) {
     auto* const current_texture = s_current_texture;
     if (current_texture != this) {
         this->bind();
@@ -206,7 +206,7 @@ void TextureBase<TType>::set_filter_min(const TextureFilterType filter_type) {
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-void TextureBase<TType>::set_filter_mag(const TextureFilterType filter_type) {
+void ITexture<TType>::set_filter_mag(const TextureFilterType filter_type) {
     auto* const current_texture = s_current_texture;
     if (current_texture != this) {
         this->bind();
@@ -231,7 +231,7 @@ void TextureBase<TType>::set_filter_mag(const TextureFilterType filter_type) {
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-void TextureBase<TType>::bind() {
+void ITexture<TType>::bind() {
     glBindTexture(TextureTypeLUT<TType>::s_value, m_texture_id);
     s_current_texture = this;
 }
@@ -239,19 +239,18 @@ void TextureBase<TType>::bind() {
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-void TextureBase<TType>::unbind() {
+void ITexture<TType>::unbind() {
     if (s_current_texture == this) {
-        TextureBase<TType>::unbind_all();
+        ITexture<TType>::unbind_all();
     }
 }
 
 /*----------------------------------------------------------------------------*/
 
-template class vq::graphics::texture::TextureBase<TextureType::TEXTURE_1D>;
-template class vq::graphics::texture::TextureBase<TextureType::TEXTURE_2D>;
-template class vq::graphics::texture::TextureBase<TextureType::TEXTURE_3D>;
-template class vq::graphics::texture::TextureBase<
-    TextureType::TEXTURE_CUBE_MAP>;
+template class vq::graphics::texture::ITexture<TextureType::TEXTURE_1D>;
+template class vq::graphics::texture::ITexture<TextureType::TEXTURE_2D>;
+template class vq::graphics::texture::ITexture<TextureType::TEXTURE_3D>;
+template class vq::graphics::texture::ITexture<TextureType::TEXTURE_CUBE_MAP>;
 
 /*----------------------------------------------------------------------------*/
 

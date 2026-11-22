@@ -12,17 +12,17 @@ namespace vq::graphics::texture {
 /*----------------------------------------------------------------------------*/
 
 Texture2D::Texture2D(const std::string& id, const std::string& source_file)
-    : TextureBase<TextureType::TEXTURE_2D>(id, {source_file}) {}
+    : ITexture<TextureType::TEXTURE_2D>(id, {source_file}) {}
 
 /*----------------------------------------------------------------------------*/
 
 Texture2D::Texture2D(Texture2D&& other)
-    : TextureBase<TextureType::TEXTURE_2D>(std::move(other)) {}
+    : ITexture<TextureType::TEXTURE_2D>(std::move(other)) {}
 
 /*----------------------------------------------------------------------------*/
 
 Texture2D& Texture2D::operator=(Texture2D&& other) {
-    TextureBase<TextureType::TEXTURE_2D>::operator=(std::move(other));
+    ITexture<TextureType::TEXTURE_2D>::operator=(std::move(other));
     return *this;
 }
 

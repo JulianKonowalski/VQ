@@ -1,12 +1,12 @@
 #pragma once
 
-#include "vq/graphics/texture/TextureBase.hpp"
+#include "vq/graphics/texture/ITexture.hpp"
 
 namespace vq::graphics::texture {
 
 /*----------------------------------------------------------------------------*/
 
-class Texture2D final : public TextureBase<TextureType::TEXTURE_2D> {
+class Texture2D final : public ITexture<TextureType::TEXTURE_2D> {
   public:
     explicit Texture2D(const std::string& id, const std::string& source_file);
     ~Texture2D() = default;

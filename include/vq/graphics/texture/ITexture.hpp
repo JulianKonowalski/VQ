@@ -23,17 +23,17 @@ enum class TextureFilterType { NEAREST, LINEAR };
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-class TextureBase : public vq::core::Resource {
+class ITexture : public vq::core::Resource {
   public:
-    explicit TextureBase(const std::string& id,
-                         const std::vector<std::string>& source_files);
-    ~TextureBase() override = default;
+    explicit ITexture(const std::string& id,
+                      const std::vector<std::string>& source_files);
+    ~ITexture() override = default;
 
-    TextureBase(TextureBase<TType>&& other);
-    TextureBase<TType>& operator=(TextureBase<TType>&& other);
+    ITexture(ITexture<TType>&& other);
+    ITexture<TType>& operator=(ITexture<TType>&& other);
 
     static void unbind_all();
-    inline static TextureBase<TType>* const get_current();
+    inline static ITexture<TType>* const get_current();
     inline static constexpr TextureType get_type();
 
     inline const std::vector<std::string>& get_source_files() const;
@@ -53,27 +53,27 @@ class TextureBase : public vq::core::Resource {
     unsigned int m_texture_id;
 
   private:
-    static TextureBase<TType>* s_current_texture;
+    static ITexture<TType>* s_current_texture;
 };
 
 /*----------------------------------------------------------------------------*/
 
 template <TextureType TType>
-TextureBase<TType>* TextureBase<TType>::s_current_texture = nullptr;
+ITexture<TType>* ITexture<TType>::s_current_texture = nullptr;
 
 template <TextureType TType>
-inline TextureBase<TType>* const TextureBase<TType>::get_current() {
+inline ITexture<TType>* const ITexture<TType>::get_current() {
     return s_current_texture;
 }
 
 template <TextureType TType>
-inline constexpr TextureType TextureBase<TType>::get_type() {
+inline constexpr TextureType ITexture<TType>::get_type() {
     return TType;
 }
 
 template <TextureType TType>
 inline const std::vector<std::string>&
-TextureBase<TType>::get_source_files() const {
+ITexture<TType>::get_source_files() const {
     return m_source_files;
 }
 

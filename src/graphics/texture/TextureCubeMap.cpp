@@ -14,7 +14,7 @@ TextureCubeMap::TextureCubeMap(const std::string& id,
                                const std::string& source_file_bottom,
                                const std::string& source_file_front,
                                const std::string& source_file_back)
-    : TextureBase<TextureType::TEXTURE_CUBE_MAP>(
+    : ITexture<TextureType::TEXTURE_CUBE_MAP>(
           id, std::vector<std::string>(
                   {source_file_right, source_file_left, source_file_top,
                    source_file_bottom, source_file_front, source_file_back})) {}
@@ -22,12 +22,12 @@ TextureCubeMap::TextureCubeMap(const std::string& id,
 /*----------------------------------------------------------------------------*/
 
 TextureCubeMap::TextureCubeMap(TextureCubeMap&& other)
-    : TextureBase<TextureType::TEXTURE_CUBE_MAP>(std::move(other)) {}
+    : ITexture<TextureType::TEXTURE_CUBE_MAP>(std::move(other)) {}
 
 /*----------------------------------------------------------------------------*/
 
 TextureCubeMap& TextureCubeMap::operator=(TextureCubeMap&& other) {
-    TextureBase<TextureType::TEXTURE_CUBE_MAP>::operator=(std::move(other));
+    ITexture<TextureType::TEXTURE_CUBE_MAP>::operator=(std::move(other));
     return *this;
 }
 
