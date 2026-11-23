@@ -37,10 +37,11 @@ Renderer::Renderer() {
  * shader etc
  */
 void Renderer::render(scene_graph::Scene& scene) {
-    auto* root_node    = scene.get_root_node();
-    auto shader_handle = core::resource::ResourceManager::get_instance()
-                             .get_resource<shader::Shader>("pbr_master_shader");
-    auto model_matrix_uniform =
+    auto* root_node = scene.get_root_node();
+    static auto shader_handle =
+        core::resource::ResourceManager::get_instance()
+            .get_resource<shader::Shader>("pbr_master_shader");
+    static auto model_matrix_uniform =
         shader_handle.get().get_uniform<glm::mat4>("u_model_matrix");
 
     glClearColor(0.0, 0.0, 0.0, 1.0);

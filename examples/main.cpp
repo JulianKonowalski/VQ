@@ -4,7 +4,7 @@
 #include <vq/graphics/shader/Shader.hpp>
 #include <vq/graphics/texture/Texture2D.hpp>
 #include <vq/graphics/texture/TextureCubeMap.hpp>
-#include <vq/graphics/transform/ProjectionTransform.hpp>
+#include <vq/graphics/transform/PerspectiveProjectionTransform.hpp>
 #include <vq/graphics/transform/RotateTransform.hpp>
 #include <vq/graphics/transform/ScaleTransform.hpp>
 #include <vq/graphics/transform/TranslateTransform.hpp>
@@ -207,10 +207,11 @@ int main(void) {
 
     vq::graphics::transform::RotateTransform rotate_transform;
     vq::graphics::transform::TranslateTransform translate_transform;
-    vq::graphics::transform::PerspectiveProjection projection_transform(
-        40.0f, 100.0f, 0.01f,
-        window.get_specification().width /
-            static_cast<float>(window.get_specification().height));
+    vq::graphics::transform::PerspectiveProjectionTransform
+        projection_transform(
+            40.0f, 100.0f, 0.01f,
+            window.get_specification().width /
+                static_cast<float>(window.get_specification().height));
 
     translate_transform.translate_on_axis(
         10.0f, vq::graphics::transform::ITransform::s_world_front);
