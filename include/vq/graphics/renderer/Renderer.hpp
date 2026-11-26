@@ -1,7 +1,6 @@
 #pragma once
 
 #include "vq/graphics/scene_graph/Scene.hpp"
-#include "vq/graphics/shader/Shader.hpp"
 
 namespace vq::graphics::renderer {
 
